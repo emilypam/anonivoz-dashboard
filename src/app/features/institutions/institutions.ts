@@ -131,14 +131,14 @@ export class InstitutionsComponent implements OnInit {
   }
 
   qrUrl(code: string): string {
-    const botUsername = 'AnoniVozBot';
+    const botUsername = 'TuVozSegura_bot';
     const deepLink = `https://t.me/${botUsername}?start=${code}`;
     const encoded = encodeURIComponent(deepLink);
     return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encoded}`;
   }
 
   deepLink(code: string): string {
-    return `https://t.me/AnoniVozBot?start=${code}`;
+    return `https://t.me/TuVozSegura_bot?start=${code}`;
   }
 
   copyLink(code: string) {
