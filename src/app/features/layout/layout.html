@@ -1,0 +1,40 @@
+<div class="shell">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <img src="/logo.jpg" alt="AnoniVoz" class="brand-logo" />
+      <span class="brand-name">AnoniVoz</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      @for (item of navItems; track item.path) {
+        <a
+          [routerLink]="item.path"
+          routerLinkActive="active"
+          class="nav-item"
+        >
+          <mat-icon>{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="avatar">{{ initials() }}</div>
+        <div class="user-details">
+          <span class="user-name">{{ user()?.name }}</span>
+          <span class="user-role">{{ user()?.role }}</span>
+        </div>
+      </div>
+      <button mat-icon-button class="logout-btn" (click)="logout()" title="Cerrar sesión">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="main">
+    <router-outlet />
+  </main>
+</div>

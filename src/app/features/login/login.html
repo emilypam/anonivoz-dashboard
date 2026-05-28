@@ -1,0 +1,138 @@
+<div class="login-page">
+  <div class="login-box">
+    <div class="login-brand">
+      <img src="/logo.jpg" alt="AnoniVoz" class="brand-logo" />
+      <div>
+        <h1>AnoniVoz</h1>
+        <p>Panel de gestión DECE</p>
+      </div>
+    </div>
+
+    @if (!setupMode()) {
+      <div class="login-form">
+        <h2>Iniciar sesión</h2>
+
+        @if (error()) {
+          <div class="alert alert-error">{{ error() }}</div>
+        }
+
+        @if (setupSuccess()) {
+          <div class="alert alert-success">{{ setupSuccess() }}</div>
+        }
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Correo electrónico</mat-label>
+          <input
+            matInput
+            type="email"
+            [(ngModel)]="email"
+            (keyup.enter)="login()"
+            autocomplete="email"
+            autofocus
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Contraseña</mat-label>
+          <input
+            matInput
+            [type]="showPassword() ? 'text' : 'password'"
+            [(ngModel)]="password"
+            (keyup.enter)="login()"
+            autocomplete="current-password"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="showPassword.set(!showPassword())"
+          >
+            <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <button
+          mat-flat-button
+          class="btn-login"
+          [disabled]="loading() || !email || !password"
+          (click)="login()"
+        >
+          @if (loading()) {
+            <mat-spinner diameter="18" />
+          } @else {
+            Ingresar
+          }
+        </button>
+
+        <button class="link-btn" type="button" (click)="setupMode.set(true)">
+          Configurar cuenta administrador
+        </button>
+      </div>
+    } @else {
+      <div class="login-form">
+        <h2>Primer acceso</h2>
+        <p class="subtitle">
+          Crea la cuenta coordinadora inicial con la clave de registro del sistema.
+        </p>
+
+        @if (setupError()) {
+          <div class="alert alert-error">{{ setupError() }}</div>
+        }
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Nombre completo</mat-label>
+          <input matInput [(ngModel)]="setupName" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Correo electrónico</mat-label>
+          <input matInput type="email" [(ngModel)]="setupEmail" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Contraseña</mat-label>
+          <input matInput type="password" [(ngModel)]="setupPassword" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Clave de registro</mat-label>
+          <input matInput type="password" [(ngModel)]="setupKey" />
+        </mat-form-field>
+
+        <button
+          mat-flat-button
+          class="btn-login"
+          [disabled]="setupLoading() || !setupName || !setupEmail || !setupPassword || !setupKey"
+          (click)="setupAdmin()"
+        >
+          @if (setupLoading()) {
+            <mat-spinner diameter="18" />
+          } @else {
+            Crear cuenta
+          }
+        </button>
+
+        <button class="link-btn" type="button" (click)="setupMode.set(false)">
+          Volver al inicio de sesión
+        </button>
+      </div>
+    }
+  </div>
+
+  <div class="login-aside">
+    <div class="aside-content">
+      <img src="/logo.jpg" alt="AnoniVoz" class="aside-logo" />
+      <h2>Sistema de gestión de casos</h2>
+      <p>
+        Revisa, asigna y da seguimiento a las denuncias recibidas a través del bot
+        AnoniVoz de forma segura y organizada.
+      </p>
+      <ul>
+        <li>Bandeja de denuncias con filtros y prioridades</li>
+        <li>Historial completo de cada caso</li>
+        <li>Notas internas del equipo DECE</li>
+        <li>Estadísticas y resumen ejecutivo</li>
+      </ul>
+    </div>
+  </div>
+</div>

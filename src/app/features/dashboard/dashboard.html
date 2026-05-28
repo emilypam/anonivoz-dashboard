@@ -1,0 +1,89 @@
+<div class="page-header">
+  <h1>Resumen del sistema</h1>
+  <p>Vista general del estado actual de las denuncias recibidas</p>
+</div>
+
+@if (loading()) {
+  <div class="spinner-wrap">
+    <mat-spinner diameter="36" />
+  </div>
+} @else {
+  <!-- Stat cards -->
+  <div class="stat-grid">
+    @for (card of statCards(); track card.label) {
+      <div class="stat-card" [class.accent]="card.accent">
+        <div class="stat-value">{{ card.value }}</div>
+        <div class="stat-label">{{ card.label }}</div>
+        <div class="stat-sub">{{ card.sub }}</div>
+      </div>
+    }
+  </div>
+
+  <div class="panels">
+    <!-- Distribución por tipo -->
+    <div class="card panel">
+      <h3>Tipos de acoso</h3>
+      <div class="bar-list">
+        @for (entry of harassmentEntries(); track entry.label) {
+          <div class="bar-item">
+            <div class="bar-info">
+              <span class="bar-label">{{ entry.label }}</span>
+              <span class="bar-count">{{ entry.value }}</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" [style.width.%]="entry.pct"></div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Estado actual -->
+    <div class="card panel">
+      <h3>Por estado</h3>
+      <div class="status-list">
+        @for (entry of statusEntries(); track entry.key) {
+          <div class="status-row">
+            <span class="badge status-{{ entry.key }}">{{ entry.label }}</span>
+            <span class="status-count">{{ entry.value }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent reports -->
+  <div class="card recent-section">
+    <div class="section-header">
+      <h3>Denuncias recientes</h3>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Tipo</th>
+          <th>Estado</th>
+          <th>Prioridad</th>
+          <th>Fecha</th>
+          <th>Asignado a</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of recent(); track r.id) {
+          <tr (click)="openReport(r.id)">
+            <td><strong>#{{ r.reportNumber }}</strong></td>
+            <td>{{ harassment(r.incident?.harassmentType ?? '') }}</td>
+            <td><span class="badge status-{{ r.status }}">{{ statusLabel(r.status) }}</span></td>
+            <td><span class="badge priority-{{ r.priority }}">{{ priorityLabel(r.priority) }}</span></td>
+            <td>{{ formatDate(r.createdAt) }}</td>
+            <td>{{ r.assignedTo?.name ?? '—' }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="empty-row">No hay denuncias registradas aún.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

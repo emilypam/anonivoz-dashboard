@@ -1,0 +1,139 @@
+<div class="page-header">
+  <div class="header-row">
+    <div>
+      <h1>Personal DECE</h1>
+      <p>Gestiona las cuentas del equipo que accede al panel</p>
+    </div>
+    <button mat-flat-button color="primary" (click)="showForm.set(!showForm())">
+      <mat-icon>{{ showForm() ? 'close' : 'person_add' }}</mat-icon>
+      {{ showForm() ? 'Cancelar' : 'Agregar miembro' }}
+    </button>
+  </div>
+</div>
+
+<!-- Add member form -->
+@if (showForm()) {
+  <div class="card form-card">
+    <h3>Nuevo miembro</h3>
+
+    @if (formError()) {
+      <div class="alert alert-error">{{ formError() }}</div>
+    }
+
+    <div class="form-grid">
+      <mat-form-field appearance="fill">
+        <mat-label>Nombre completo</mat-label>
+        <input matInput [(ngModel)]="form.name" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Correo electrónico</mat-label>
+        <input matInput type="email" [(ngModel)]="form.email" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Contraseña temporal</mat-label>
+        <input matInput type="password" [(ngModel)]="form.password" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Rol</mat-label>
+        <mat-select [(ngModel)]="form.role">
+          @for (r of roles; track r.value) {
+            <mat-option [value]="r.value">{{ r.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="form-actions">
+      <button mat-stroked-button (click)="showForm.set(false)">Cancelar</button>
+      <button
+        mat-flat-button
+        color="primary"
+        [disabled]="saving() || !form.name || !form.email || !form.password"
+        (click)="createMember()"
+      >
+        @if (saving()) { <mat-spinner diameter="16" /> }
+        @else { Crear cuenta }
+      </button>
+    </div>
+  </div>
+}
+
+<!-- Members table -->
+<div class="card table-card">
+  @if (loading()) {
+    <div class="spinner-wrap">
+      <mat-spinner diameter="32" />
+    </div>
+  } @else {
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Correo</th>
+          <th>Rol</th>
+          <th>Estado</th>
+          <th>Denuncias</th>
+          <th>Creado</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (m of members(); track m.id) {
+          <tr [class.editing]="editingId() === m.id">
+            <td><strong>{{ m.name }}</strong></td>
+            <td class="email-col">{{ m.email }}</td>
+
+            @if (editingId() === m.id) {
+              <td>
+                <mat-form-field appearance="fill" subscriptSizing="dynamic" class="inline-field">
+                  <mat-select [(ngModel)]="editRole">
+                    @for (r of roles; track r.value) {
+                      <mat-option [value]="r.value">{{ r.label }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-slide-toggle [(ngModel)]="editActive" color="primary">
+                  {{ editActive ? 'Activo' : 'Inactivo' }}
+                </mat-slide-toggle>
+              </td>
+            } @else {
+              <td>{{ roleLabel(m.role) }}</td>
+              <td>
+                <span class="status-dot" [class.active]="m.active">
+                  {{ m.active ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+            }
+
+            <td>{{ m._count?.assignedReports ?? 0 }}</td>
+            <td>{{ formatDate(m.createdAt) }}</td>
+
+            <td class="actions-col">
+              @if (editingId() === m.id) {
+                <button mat-icon-button color="primary" [disabled]="savingEdit()" (click)="saveEdit(m.id)" title="Guardar">
+                  <mat-icon>check</mat-icon>
+                </button>
+                <button mat-icon-button (click)="cancelEdit()" title="Cancelar">
+                  <mat-icon>close</mat-icon>
+                </button>
+              } @else {
+                <button mat-icon-button (click)="startEdit(m)" title="Editar">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              }
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="7" class="empty-row">No hay miembros registrados.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

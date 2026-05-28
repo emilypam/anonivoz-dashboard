@@ -1,0 +1,99 @@
+<div class="page-header">
+  <h1>Denuncias</h1>
+  <p>{{ total() }} {{ total() === 1 ? 'denuncia registrada' : 'denuncias registradas' }}</p>
+</div>
+
+<!-- Filters -->
+<div class="card filters-bar">
+  <mat-form-field appearance="fill" subscriptSizing="dynamic">
+    <mat-label>Estado</mat-label>
+    <mat-select [(ngModel)]="filterStatus" (ngModelChange)="applyFilters()">
+      @for (s of statuses; track s.value) {
+        <mat-option [value]="s.value">{{ s.label }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" subscriptSizing="dynamic">
+    <mat-label>Prioridad</mat-label>
+    <mat-select [(ngModel)]="filterPriority" (ngModelChange)="applyFilters()">
+      @for (p of priorities; track p.value) {
+        <mat-option [value]="p.value">{{ p.label }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" subscriptSizing="dynamic">
+    <mat-label>Tipo de acoso</mat-label>
+    <mat-select [(ngModel)]="filterType" (ngModelChange)="applyFilters()">
+      @for (t of harassmentTypes; track t.value) {
+        <mat-option [value]="t.value">{{ t.label }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  @if (filterStatus || filterPriority || filterType) {
+    <button mat-stroked-button (click)="clearFilters()">
+      <mat-icon>close</mat-icon>
+      Limpiar filtros
+    </button>
+  }
+</div>
+
+<!-- Table -->
+<div class="card table-card">
+  @if (loading()) {
+    <div class="spinner-wrap">
+      <mat-spinner diameter="32" />
+    </div>
+  } @else {
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Denunciante</th>
+          <th>Tipo de acoso</th>
+          <th>Estado</th>
+          <th>Prioridad</th>
+          <th>Asignado a</th>
+          <th>Fecha</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of reports(); track r.id) {
+          <tr (click)="openReport(r.id)">
+            <td><strong class="report-num">#{{ r.reportNumber }}</strong></td>
+            <td>{{ informantLabel(r.informantType) }}</td>
+            <td>{{ harassmentLabel(r.incident?.harassmentType ?? '') }}</td>
+            <td><span class="badge status-{{ r.status }}">{{ statusLabel(r.status) }}</span></td>
+            <td><span class="badge priority-{{ r.priority }}">{{ priorityLabel(r.priority) }}</span></td>
+            <td>{{ r.assignedTo?.name ?? '—' }}</td>
+            <td class="date-col">{{ formatDate(r.createdAt) }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="7" class="empty-row">No se encontraron denuncias con los filtros aplicados.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    @if (total() > 0) {
+      <div class="pagination">
+        <span class="pagination-info">
+          Página {{ page + 1 }} de {{ totalPages }}
+          &nbsp;·&nbsp; {{ total() }} resultados
+        </span>
+        <div class="pagination-btns">
+          <button mat-icon-button [disabled]="page === 0" (click)="prevPage()">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <button mat-icon-button [disabled]="(page + 1) * 20 >= total()" (click)="nextPage()">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
+      </div>
+    }
+  }
+</div>

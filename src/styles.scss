@@ -1,1 +1,152 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+// ── Material theme — teal/cyan matching app logo ───────────────────────────────
+@include mat.core();
+
+$primary-palette: mat.m2-define-palette(mat.$m2-cyan-palette, 800, 600, 900);
+$accent-palette:  mat.m2-define-palette(mat.$m2-cyan-palette, 400);
+$warn-palette:    mat.m2-define-palette(mat.$m2-red-palette);
+
+$theme: mat.m2-define-light-theme((
+  color: (
+    primary: $primary-palette,
+    accent:  $accent-palette,
+    warn:    $warn-palette,
+  ),
+  typography: mat.m2-define-typography-config(
+    $font-family: 'Inter, sans-serif',
+  ),
+  density: 0,
+));
+
+@include mat.all-component-themes($theme);
+
+// ── Design tokens — colores del logo ─────────────────────────────────────────
+:root {
+  // Sidebar: teal oscuro del escudo del logo
+  --sidebar-bg:          #1a5668;
+  --sidebar-hover:       #235f74;
+  --sidebar-active:      #5dc4bf;
+  --sidebar-text:        #b2d8de;
+  --sidebar-text-active: #ffffff;
+
+  // Superficie y fondo
+  --content-bg:  #f0fafa;
+  --card-bg:     #ffffff;
+  --border:      #cde8eb;
+
+  // Tipografía
+  --text-primary:   #0d3d4a;
+  --text-secondary: #5a8a94;
+
+  // Acento interactivo — teal brillante del círculo del logo
+  --accent:      #2fa8b8;
+  --accent-dark: #1a8a99;
+
+  // Badges de estado
+  --status-pending-bg:    #fef3c7;
+  --status-pending-text:  #92400e;
+  --status-in-review-bg:  #cffafe;
+  --status-in-review-text:#155e75;
+  --status-resolved-bg:   #d1fae5;
+  --status-resolved-text: #065f46;
+  --status-dismissed-bg:  #f1f5f9;
+  --status-dismissed-text:#475569;
+
+  // Badges de prioridad
+  --priority-low-bg:     #f1f5f9;
+  --priority-low-text:   #475569;
+  --priority-medium-bg:  #cffafe;
+  --priority-medium-text:#155e75;
+  --priority-high-bg:    #ffedd5;
+  --priority-high-text:  #9a3412;
+  --priority-urgent-bg:  #fee2e2;
+  --priority-urgent-text:#991b1b;
+}
+
+// ── Reset & base ──────────────────────────────────────────────────────────────
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--text-primary);
+  background: var(--content-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+// ── Badges ────────────────────────────────────────────────────────────────────
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+
+  &.status-PENDING    { background: var(--status-pending-bg);    color: var(--status-pending-text); }
+  &.status-IN_REVIEW  { background: var(--status-in-review-bg);  color: var(--status-in-review-text); }
+  &.status-RESOLVED   { background: var(--status-resolved-bg);   color: var(--status-resolved-text); }
+  &.status-DISMISSED  { background: var(--status-dismissed-bg);  color: var(--status-dismissed-text); }
+
+  &.priority-LOW    { background: var(--priority-low-bg);    color: var(--priority-low-text); }
+  &.priority-MEDIUM { background: var(--priority-medium-bg); color: var(--priority-medium-text); }
+  &.priority-HIGH   { background: var(--priority-high-bg);   color: var(--priority-high-text); }
+  &.priority-URGENT { background: var(--priority-urgent-bg); color: var(--priority-urgent-text); }
+}
+
+// ── Card ──────────────────────────────────────────────────────────────────────
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+}
+
+// ── Page header ───────────────────────────────────────────────────────────────
+.page-header {
+  margin-bottom: 24px;
+  h1 { font-size: 20px; font-weight: 600; color: var(--text-primary); }
+  p  { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+}
+
+// ── Table ─────────────────────────────────────────────────────────────────────
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+
+  th {
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: #f5fbfc;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  tbody tr {
+    transition: background 0.12s;
+    cursor: pointer;
+    &:hover       { background: #f5fbfc; }
+    &:last-child td { border-bottom: none; }
+  }
+}
+
+// ── Material overrides ────────────────────────────────────────────────────────
+.mat-mdc-form-field { font-family: 'Inter', sans-serif !important; }
+.mat-mdc-dialog-container { --mdc-dialog-container-shape: 12px; }
+.mdc-text-field--filled:not(.mdc-text-field--disabled) { background-color: #f5fbfc !important; }
+
+// ── Scrollbar ─────────────────────────────────────────────────────────────────
+::-webkit-scrollbar          { width: 6px; height: 6px; }
+::-webkit-scrollbar-track    { background: transparent; }
+::-webkit-scrollbar-thumb    { background: #a8d4da; border-radius: 3px; }

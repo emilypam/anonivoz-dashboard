@@ -1,0 +1,277 @@
+@if (loading()) {
+  <div class="spinner-wrap">
+    <mat-spinner diameter="36" />
+  </div>
+} @else if (report(); as r) {
+  <!-- Header -->
+  <div class="detail-header">
+    <button mat-icon-button (click)="goBack()" class="back-btn">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="header-info">
+      <h1>Denuncia #{{ r.reportNumber }}</h1>
+      <div class="header-badges">
+        <span class="badge status-{{ r.status }}">{{ statusLabel(r.status) }}</span>
+        <span class="badge priority-{{ r.priority }}">{{ priorityLabel(r.priority) }}</span>
+        <span class="meta">{{ informantLabel(r.informantType) }} &nbsp;·&nbsp; {{ formatShortDate(r.createdAt) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="detail-layout">
+    <!-- Left: tabs + content -->
+    <div class="detail-main">
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <button
+          class="tab-btn"
+          [class.active]="activeTab() === 'info'"
+          (click)="activeTab.set('info')"
+        >
+          Información del caso
+        </button>
+        <button
+          class="tab-btn"
+          [class.active]="activeTab() === 'notes'"
+          (click)="activeTab.set('notes')"
+        >
+          Notas internas
+          @if (r.notes?.length) {
+            <span class="tab-count">{{ r.notes!.length }}</span>
+          }
+        </button>
+        <button
+          class="tab-btn"
+          [class.active]="activeTab() === 'history'"
+          (click)="activeTab.set('history')"
+        >
+          Historial
+        </button>
+      </div>
+
+      <!-- Tab: Info -->
+      @if (activeTab() === 'info') {
+        <div class="tab-content card">
+          @if (r.incident) {
+            <section class="info-section">
+              <h3>Detalles del incidente</h3>
+              <div class="info-grid">
+                <div class="info-item">
+                  <label>Tipo de acoso</label>
+                  <span>{{ harassmentLabel(r.incident.harassmentType) }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Frecuencia</label>
+                  <span>{{ frequencyLabel(r.incident.frequencyLevel) }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Lugar</label>
+                  <span>{{ locationLabel(r.incident.locationTag) }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Fecha aproximada</label>
+                  <span>{{ dateLabel(r.incident.incidentDateApprox) }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Denuncia previa</label>
+                  <span>{{ r.previousReport ? 'Sí' : 'No' }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Solicita contacto</label>
+                  <span>{{ r.wantsContact ? 'Sí' : 'No' }}</span>
+                </div>
+              </div>
+              <div class="info-description">
+                <label>Descripción</label>
+                <p>{{ r.incident.description }}</p>
+              </div>
+            </section>
+          }
+
+          @if (r.aggressors?.length) {
+            <section class="info-section">
+              <h3>Agresor(es)</h3>
+              @for (a of r.aggressors; track a.id) {
+                <p class="info-text">{{ a.description }}</p>
+              }
+            </section>
+          }
+
+          @if (r.witnesses?.length) {
+            <section class="info-section">
+              <h3>Testigos</h3>
+              @for (w of r.witnesses; track w.id) {
+                <p class="info-text">{{ w.description }}</p>
+              }
+            </section>
+          }
+
+          @if (r.evidence?.length) {
+            <section class="info-section">
+              <h3>Evidencia</h3>
+              <div class="evidence-list">
+                @for (e of r.evidence; track e.id) {
+                  <a [href]="e.url" target="_blank" rel="noopener" class="evidence-link">
+                    <mat-icon>link</mat-icon>
+                    {{ e.url }}
+                  </a>
+                }
+              </div>
+            </section>
+          }
+        </div>
+      }
+
+      <!-- Tab: Notes -->
+      @if (activeTab() === 'notes') {
+        <div class="tab-content card">
+          <div class="add-note">
+            <mat-form-field appearance="fill" class="note-field">
+              <mat-label>Agregar nota interna</mat-label>
+              <textarea
+                matInput
+                [(ngModel)]="newNote"
+                rows="3"
+                placeholder="Visible solo para el equipo DECE..."
+              ></textarea>
+            </mat-form-field>
+            <button
+              mat-flat-button
+              color="primary"
+              [disabled]="!newNote.trim() || savingNote()"
+              (click)="addNote()"
+            >
+              @if (savingNote()) { <mat-spinner diameter="16" /> }
+              @else { Guardar nota }
+            </button>
+          </div>
+
+          <div class="notes-list">
+            @for (note of r.notes; track note.id) {
+              <div class="note-card">
+                <div class="note-header">
+                  <span class="note-author">{{ note.author.name }}</span>
+                  <span class="note-date">{{ formatDate(note.createdAt) }}</span>
+                </div>
+                <p class="note-content">{{ note.content }}</p>
+              </div>
+            } @empty {
+              <p class="empty-state">Aún no hay notas en este caso.</p>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Tab: History -->
+      @if (activeTab() === 'history') {
+        <div class="tab-content card">
+          <div class="timeline">
+            @for (h of r.statusHistory; track h.id) {
+              <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-body">
+                  <div class="timeline-header">
+                    @if (h.oldStatus) {
+                      <span class="badge status-{{ h.oldStatus }}">{{ statusLabel(h.oldStatus) }}</span>
+                      <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+                    }
+                    <span class="badge status-{{ h.newStatus }}">{{ statusLabel(h.newStatus) }}</span>
+                  </div>
+                  <div class="timeline-meta">
+                    <span>{{ h.changedBy?.name ?? 'Sistema' }}</span>
+                    <span>{{ formatDate(h.changedAt) }}</span>
+                  </div>
+                  @if (h.notes) {
+                    <p class="timeline-note">{{ h.notes }}</p>
+                  }
+                </div>
+              </div>
+            } @empty {
+              <p class="empty-state">Sin historial de cambios.</p>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Right: actions sidebar -->
+    <aside class="detail-sidebar">
+      <div class="card sidebar-card">
+        <h3>Estado del caso</h3>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Estado</mat-label>
+          <mat-select [(ngModel)]="selectedStatus">
+            @for (s of statuses; track s.value) {
+              <mat-option [value]="s.value">{{ s.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        @if (selectedStatus !== r.status) {
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Nota del cambio (opcional)</mat-label>
+            <textarea matInput [(ngModel)]="statusNote" rows="2"></textarea>
+          </mat-form-field>
+        }
+
+        <button
+          mat-flat-button
+          color="primary"
+          class="full-width"
+          [disabled]="selectedStatus === r.status || saving()"
+          (click)="saveStatus()"
+        >
+          Actualizar estado
+        </button>
+      </div>
+
+      <div class="card sidebar-card">
+        <h3>Prioridad</h3>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Prioridad</mat-label>
+          <mat-select [(ngModel)]="selectedPriority">
+            @for (p of priorities; track p.value) {
+              <mat-option [value]="p.value">{{ p.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <button
+          mat-flat-button
+          color="primary"
+          class="full-width"
+          [disabled]="selectedPriority === r.priority || saving()"
+          (click)="savePriority()"
+        >
+          Actualizar prioridad
+        </button>
+      </div>
+
+      <div class="card sidebar-card">
+        <h3>Asignación</h3>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Consejero/a responsable</mat-label>
+          <mat-select [(ngModel)]="selectedAssignee">
+            <mat-option value="">Sin asignar</mat-option>
+            @for (m of members(); track m.id) {
+              <mat-option [value]="m.id">{{ m.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <button
+          mat-flat-button
+          color="primary"
+          class="full-width"
+          [disabled]="selectedAssignee === (r.assignedTo?.id ?? '') || saving()"
+          (click)="saveAssignee()"
+        >
+          Guardar asignación
+        </button>
+      </div>
+    </aside>
+  </div>
+}

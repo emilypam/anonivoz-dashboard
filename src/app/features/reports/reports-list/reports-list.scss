@@ -1,0 +1,57 @@
+.filters-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+
+  mat-form-field {
+    width: 180px;
+  }
+}
+
+.table-card {
+  padding: 0;
+}
+
+.spinner-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 60px 0;
+}
+
+.report-num {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.date-col {
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.empty-row {
+  text-align: center;
+  color: var(--text-secondary);
+  font-style: italic;
+  padding: 48px !important;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+
+  .pagination-info {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .pagination-btns {
+    display: flex;
+    gap: 4px;
+  }
+}

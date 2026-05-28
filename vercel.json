@@ -1,0 +1,7 @@
+{
+  "buildCommand": "npx ng build --configuration=production",
+  "outputDirectory": "dist/anonivoz-dashboard/browser",
+  "rewrites": [
+    { "source": "/((?!.*\\.).*)", "destination": "/index.html" }
+  ]
+}
