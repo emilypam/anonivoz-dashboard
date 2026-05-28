@@ -23,7 +23,7 @@
   transition: box-shadow 0.15s, transform 0.15s;
 
   &:hover {
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
     transform: translateY(-1px);
   }
 
@@ -43,9 +43,7 @@
     }
   }
 
-  .stat-body {
-    min-width: 0;
-  }
+  .stat-body { min-width: 0; }
 
   .stat-value {
     font-size: 28px;
@@ -70,13 +68,14 @@
     color: var(--text-secondary);
   }
 
-  &.card-blue .stat-icon  { background: #e0f0ff; mat-icon { color: #2563eb; } }
-  &.card-teal .stat-icon  { background: #d0f0ed; mat-icon { color: var(--accent); } }
-  &.card-orange .stat-icon { background: #fff3e0; mat-icon { color: #f97316; } }
-  &.card-red .stat-icon   { background: #fee2e2; mat-icon { color: #dc2626; } }
+  // Fondos translúcidos — mínima saturación para no competir con los datos
+  &.card-blue   .stat-icon { background: rgba(37, 99, 235, 0.15);   mat-icon { color: #60A5FA; } }
+  &.card-teal   .stat-icon { background: rgba(16, 185, 129, 0.12);  mat-icon { color: #34D399; } }
+  &.card-orange .stat-icon { background: rgba(249, 115, 22, 0.15);  mat-icon { color: #FB923C; } }
+  &.card-red    .stat-icon { background: rgba(239, 68, 68, 0.15);   mat-icon { color: #F87171; } }
 
-  &.card-orange .stat-value { color: #f97316; }
-  &.card-red    .stat-value { color: #dc2626; }
+  &.card-orange .stat-value { color: #FB923C; }
+  &.card-red    .stat-value { color: #F87171; }
 }
 
 // ── Panels row ────────────────────────────────────────────────────────────────
@@ -102,11 +101,11 @@
     }
 
     h3 {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       color: var(--text-secondary);
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.07em;
       margin: 0;
     }
   }
@@ -120,7 +119,7 @@
   }
 }
 
-// ── Bar chart ─────────────────────────────────────────────────────────────────
+// ── Bar chart — tipos de acoso ────────────────────────────────────────────────
 .bar-list {
   display: flex;
   flex-direction: column;
@@ -149,20 +148,20 @@
 
 .bar-track {
   height: 8px;
-  background: var(--border);
+  background: rgba(51, 65, 85, 0.8);
   border-radius: 4px;
   overflow: hidden;
 }
 
 .bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--accent) 0%, #5dc4bf 100%);
+  background: linear-gradient(90deg, #2563EB 0%, #60A5FA 100%);
   border-radius: 4px;
   transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   min-width: 3px;
 }
 
-// ── Status list ───────────────────────────────────────────────────────────────
+// ── Status distribution — colores semánticos estrictos ───────────────────────
 .status-list {
   display: flex;
   flex-direction: column;
@@ -177,11 +176,9 @@
 
   .status-left { display: flex; align-items: center; }
 
-  .status-bar-wrap { flex: 1; }
-
   .status-bar-track {
     height: 8px;
-    background: var(--border);
+    background: rgba(51, 65, 85, 0.8);
     border-radius: 4px;
     overflow: hidden;
   }
@@ -192,10 +189,10 @@
     transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     min-width: 0;
 
-    &.fill-PENDING    { background: #f97316; }
-    &.fill-IN_REVIEW  { background: #3b82f6; }
-    &.fill-RESOLVED   { background: #10b981; }
-    &.fill-DISMISSED  { background: #9ca3af; }
+    &.fill-PENDING   { background: #F97316; }   // naranja
+    &.fill-IN_REVIEW { background: #6366F1; }   // índigo
+    &.fill-RESOLVED  { background: #10B981; }   // esmeralda
+    &.fill-DISMISSED { background: #475569; }   // gris neutro
   }
 
   .status-count {
@@ -206,7 +203,7 @@
   }
 }
 
-// ── Recent section ────────────────────────────────────────────────────────────
+// ── Recent reports ────────────────────────────────────────────────────────────
 .recent-section {
   padding: 0;
 
@@ -230,11 +227,11 @@
       }
 
       h3 {
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 600;
         color: var(--text-secondary);
         text-transform: uppercase;
-        letter-spacing: 0.06em;
+        letter-spacing: 0.07em;
         margin: 0;
       }
     }
@@ -251,7 +248,7 @@
   }
 }
 
-.report-num { color: var(--accent); }
+.report-num { color: var(--accent); font-weight: 600; }
 .date-col   { color: var(--text-secondary); font-size: 12px; }
 
 .empty-row {
@@ -280,6 +277,6 @@
 }
 
 @media (max-width: 600px) {
-  .stat-grid { grid-template-columns: 1fr; }
+  .stat-grid  { grid-template-columns: 1fr; }
   .status-row { grid-template-columns: 90px 1fr 28px; }
 }

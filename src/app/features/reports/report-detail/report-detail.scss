@@ -207,7 +207,7 @@
 }
 
 .note-card {
-  background: #f8fafc;
+  background: var(--card-elevated);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 12px 16px;

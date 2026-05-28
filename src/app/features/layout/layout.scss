@@ -12,18 +12,19 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .sidebar-brand {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 18px 16px 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 20px 16px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 
   .brand-logo {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
     object-fit: contain;
     flex-shrink: 0;
     border-radius: 8px;
@@ -39,49 +40,59 @@
 
 .sidebar-nav {
   flex: 1;
-  padding: 12px 10px;
+  padding: 12px 8px;
   display: flex;
   flex-direction: column;
   gap: 2px;
   overflow-y: auto;
 }
 
+// Borde izquierdo siempre reservado para evitar layout shift al activarse
 .nav-item {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 12px;
-  border-radius: 8px;
+  padding: 10px 12px 10px 9px;
+  border-left: 3px solid transparent;
+  border-radius: 0 8px 8px 0;
   color: var(--sidebar-text);
   text-decoration: none;
   font-size: 13px;
   font-weight: 500;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
 
   mat-icon {
     font-size: 18px;
     width: 18px;
     height: 18px;
-    opacity: 0.7;
+    opacity: 0.6;
     transition: opacity 0.15s;
+    flex-shrink: 0;
   }
 
   &:hover {
     background: var(--sidebar-hover);
-    color: #fff;
-    mat-icon { opacity: 1; }
+    color: #e2e8f0;
+    mat-icon { opacity: 0.9; }
   }
 
   &.active {
-    background: rgba(93, 196, 191, 0.18);
-    color: #5dc4bf;
-    mat-icon { opacity: 1; color: #5dc4bf; }
+    background: rgba(37, 99, 235, 0.12);
+    border-left-color: var(--sidebar-active);
+    color: var(--sidebar-text-active);
+    font-weight: 600;
+
+    mat-icon {
+      opacity: 1;
+      color: #93C5FD;
+    }
   }
 }
 
+// ── Footer ────────────────────────────────────────────────────────────────────
 .sidebar-footer {
   padding: 14px 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -99,7 +110,7 @@
   width: 32px;
   height: 32px;
   min-width: 32px;
-  background: linear-gradient(135deg, #5dc4bf 0%, #2fa8b8 100%);
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -107,6 +118,7 @@
   font-size: 11px;
   font-weight: 700;
   color: #fff;
+  letter-spacing: 0.02em;
 }
 
 .user-details {
@@ -117,7 +129,7 @@
   .user-name {
     font-size: 12px;
     font-weight: 600;
-    color: #fff;
+    color: #e2e8f0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -127,14 +139,15 @@
     font-size: 10px;
     color: var(--sidebar-text);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
   }
 }
 
 .logout-btn {
   color: var(--sidebar-text) !important;
   flex-shrink: 0;
-  &:hover { color: #fff !important; }
+  transition: color 0.15s !important;
+  &:hover { color: #e2e8f0 !important; }
 }
 
 // ── Main area ─────────────────────────────────────────────────────────────────

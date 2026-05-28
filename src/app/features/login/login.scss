@@ -6,7 +6,7 @@
 .login-box {
   width: 440px;
   min-width: 440px;
-  background: #fff;
+  background: var(--card-bg);
   display: flex;
   flex-direction: column;
   padding: 48px 40px;
@@ -66,7 +66,7 @@
 .btn-login {
   width: 100%;
   height: 44px;
-  background: var(--sidebar-bg) !important;
+  background: var(--accent) !important;
   color: #fff !important;
   font-size: 14px !important;
   font-weight: 500 !important;
@@ -78,7 +78,7 @@
   gap: 8px;
 
   &:hover { background: var(--accent-dark) !important; }
-  &:disabled { opacity: 0.5; cursor: not-allowed; }
+  &:disabled { opacity: 0.45; cursor: not-allowed; }
 }
 
 .link-btn {
@@ -99,14 +99,22 @@
   font-size: 13px;
   line-height: 1.5;
 
-  &.alert-error   { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
-  &.alert-success { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+  &.alert-error {
+    background: rgba(239, 68, 68, 0.12);
+    color: #FCA5A5;
+    border: 1px solid rgba(239, 68, 68, 0.30);
+  }
+  &.alert-success {
+    background: rgba(16, 185, 129, 0.12);
+    color: #6EE7B7;
+    border: 1px solid rgba(16, 185, 129, 0.30);
+  }
 }
 
-// ── Right panel — matches logo gradient ───────────────────────────────────────
+// ── Right panel — gradiente azul institucional ────────────────────────────────
 .login-aside {
   flex: 1;
-  background: linear-gradient(150deg, #1a5668 0%, #2a8899 55%, #5dc4bf 100%);
+  background: linear-gradient(150deg, #0B1120 0%, #1E3A6E 55%, #2563EB 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -114,14 +122,13 @@
   position: relative;
   overflow: hidden;
 
-  // subtle background pattern
   &::before {
     content: '';
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(circle at 20% 80%, rgba(93, 196, 191, 0.25) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.08) 0%, transparent 40%);
+      radial-gradient(circle at 20% 80%, rgba(37, 99, 235, 0.30) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.06) 0%, transparent 40%);
   }
 
   .aside-content {
@@ -135,7 +142,7 @@
       object-fit: contain;
       display: block;
       margin-bottom: 24px;
-      filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.2));
+      filter: drop-shadow(0 4px 20px rgba(37, 99, 235, 0.4));
     }
 
     h2 {
@@ -148,7 +155,7 @@
 
     p {
       font-size: 15px;
-      color: rgba(255, 255, 255, 0.75);
+      color: rgba(255, 255, 255, 0.70);
       line-height: 1.7;
       margin-bottom: 28px;
     }
@@ -161,7 +168,7 @@
 
       li {
         font-size: 14px;
-        color: rgba(255, 255, 255, 0.85);
+        color: rgba(255, 255, 255, 0.80);
         display: flex;
         align-items: center;
         gap: 10px;
@@ -170,10 +177,10 @@
           content: '';
           width: 7px;
           height: 7px;
-          background: #5dc4bf;
+          background: #60A5FA;
           border-radius: 50%;
           flex-shrink: 0;
-          box-shadow: 0 0 0 3px rgba(93, 196, 191, 0.25);
+          box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.22);
         }
       }
     }
