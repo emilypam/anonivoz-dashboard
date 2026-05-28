@@ -1,0 +1,133 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Instituciones</h1>
+      <p class="page-sub">Gestiona las unidades educativas Fe y Alegría registradas en el sistema.</p>
+    </div>
+    <button mat-flat-button class="btn-primary" (click)="showForm.set(!showForm())">
+      <mat-icon>{{ showForm() ? 'close' : 'add' }}</mat-icon>
+      {{ showForm() ? 'Cancelar' : 'Nueva institución' }}
+    </button>
+  </div>
+
+  @if (showForm()) {
+    <div class="form-card">
+      <h2 class="form-title">Nueva institución</h2>
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre de la institución</mat-label>
+          <input matInput [(ngModel)]="form.name" placeholder="Fe y Alegría N.° 1" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Ciudad</mat-label>
+          <input matInput [(ngModel)]="form.city" placeholder="Quito" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Código (opcional)</mat-label>
+          <input matInput [(ngModel)]="form.code" placeholder="Se genera automáticamente" />
+          <mat-hint>Solo letras y números. Si lo dejas vacío, se genera uno automáticamente.</mat-hint>
+        </mat-form-field>
+      </div>
+
+      @if (formError()) {
+        <p class="form-error">{{ formError() }}</p>
+      }
+
+      <div class="form-actions">
+        <button mat-flat-button class="btn-primary" (click)="create()" [disabled]="saving() || !form.name.trim()">
+          @if (saving()) {
+            <mat-spinner diameter="18" />
+          } @else {
+            Crear institución
+          }
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="loading-wrap">
+      <mat-spinner diameter="40" />
+    </div>
+  } @else if (institutions().length === 0) {
+    <div class="empty">
+      <mat-icon>apartment</mat-icon>
+      <p>No hay instituciones registradas todavía.</p>
+    </div>
+  } @else {
+    <div class="inst-grid">
+      @for (inst of institutions(); track inst.id) {
+        <div class="inst-card" [class.inactive]="!inst.active">
+
+          @if (editingId() === inst.id) {
+            <div class="edit-area">
+              <mat-form-field appearance="outline">
+                <mat-label>Nombre</mat-label>
+                <input matInput [(ngModel)]="editName" />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Ciudad</mat-label>
+                <input matInput [(ngModel)]="editCity" />
+              </mat-form-field>
+              <div class="toggle-row">
+                <mat-slide-toggle [(ngModel)]="editActive" color="primary">Activa</mat-slide-toggle>
+              </div>
+              <div class="edit-actions">
+                <button mat-flat-button class="btn-primary" (click)="saveEdit(inst.id)" [disabled]="savingEdit()">
+                  @if (savingEdit()) { <mat-spinner diameter="16" /> } @else { Guardar }
+                </button>
+                <button mat-stroked-button (click)="cancelEdit()">Cancelar</button>
+              </div>
+            </div>
+          } @else {
+            <div class="inst-header">
+              <div class="inst-info">
+                <span class="inst-name">{{ inst.name }}</span>
+                <span class="inst-meta">
+                  <span class="code-chip">{{ inst.code }}</span>
+                  @if (inst.city) { <span class="city">{{ inst.city }}</span> }
+                </span>
+              </div>
+              <div class="inst-badges">
+                <span class="badge" [class.badge-active]="inst.active" [class.badge-inactive]="!inst.active">
+                  {{ inst.active ? 'Activa' : 'Inactiva' }}
+                </span>
+              </div>
+            </div>
+
+            <div class="inst-counts">
+              <span><mat-icon>group</mat-icon> {{ inst._count?.members ?? 0 }} miembros</span>
+              <span><mat-icon>folder_open</mat-icon> {{ inst._count?.reports ?? 0 }} denuncias</span>
+            </div>
+
+            <div class="inst-actions">
+              <button mat-icon-button title="Editar" (click)="startEdit(inst)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button title="Ver QR / enlace" (click)="showQr(inst)">
+                <mat-icon>qr_code_2</mat-icon>
+              </button>
+            </div>
+
+            @if (qrInstitution()?.id === inst.id) {
+              <div class="qr-panel">
+                <p class="qr-label">Código QR para estudiantes</p>
+                <img [src]="qrUrl(inst.code)" [alt]="'QR ' + inst.name" class="qr-img" />
+                <div class="link-row">
+                  <span class="link-text">{{ deepLink(inst.code) }}</span>
+                  <button mat-icon-button title="Copiar enlace" (click)="copyLink(inst.code)">
+                    <mat-icon>content_copy</mat-icon>
+                  </button>
+                </div>
+                <p class="qr-hint">Los estudiantes escanean este QR para acceder al bot ya vinculado a esta institución.</p>
+              </div>
+            }
+          }
+
+        </div>
+      }
+    </div>
+  }
+</div>

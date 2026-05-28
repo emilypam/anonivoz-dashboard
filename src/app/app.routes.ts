@@ -38,6 +38,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/staff/staff').then((m) => m.StaffComponent),
       },
+      {
+        path: 'institutions',
+        loadComponent: () =>
+          import('./features/institutions/institutions').then((m) => m.InstitutionsComponent),
+      },
     ],
   },
   { path: '**', redirectTo: 'dashboard' },

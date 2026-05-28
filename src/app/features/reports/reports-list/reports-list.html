@@ -32,7 +32,19 @@
     </mat-select>
   </mat-form-field>
 
-  @if (filterStatus || filterPriority || filterType) {
+  @if (isAdmin) {
+    <mat-form-field appearance="fill" subscriptSizing="dynamic">
+      <mat-label>Institución</mat-label>
+      <mat-select [(ngModel)]="filterInstitutionId" (ngModelChange)="applyFilters()">
+        <mat-option value="">Todas</mat-option>
+        @for (inst of institutions(); track inst.id) {
+          <mat-option [value]="inst.id">{{ inst.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  }
+
+  @if (filterStatus || filterPriority || filterType || filterInstitutionId) {
     <button mat-stroked-button (click)="clearFilters()">
       <mat-icon>close</mat-icon>
       Limpiar filtros
@@ -53,6 +65,7 @@
           <th>#</th>
           <th>Denunciante</th>
           <th>Tipo de acoso</th>
+          @if (isAdmin) { <th>Institución</th> }
           <th>Estado</th>
           <th>Prioridad</th>
           <th>Asignado a</th>
@@ -65,6 +78,7 @@
             <td><strong class="report-num">#{{ r.reportNumber }}</strong></td>
             <td>{{ informantLabel(r.informantType) }}</td>
             <td>{{ harassmentLabel(r.incident?.harassmentType ?? '') }}</td>
+            @if (isAdmin) { <td class="inst-col">{{ r.institution?.name ?? '—' }}</td> }
             <td><span class="badge status-{{ r.status }}">{{ statusLabel(r.status) }}</span></td>
             <td><span class="badge priority-{{ r.priority }}">{{ priorityLabel(r.priority) }}</span></td>
             <td>{{ r.assignedTo?.name ?? '—' }}</td>
@@ -72,7 +86,7 @@
           </tr>
         } @empty {
           <tr>
-            <td colspan="7" class="empty-row">No se encontraron denuncias con los filtros aplicados.</td>
+            <td [attr.colspan]="isAdmin ? 8 : 7" class="empty-row">No se encontraron denuncias con los filtros aplicados.</td>
           </tr>
         }
       </tbody>

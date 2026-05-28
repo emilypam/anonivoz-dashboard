@@ -12,12 +12,24 @@ export type ReportStatus = 'PENDING' | 'IN_REVIEW' | 'RESOLVED' | 'DISMISSED';
 export type Priority = 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
 export type DeceRole = 'COUNSELOR' | 'COORDINATOR' | 'DIRECTOR';
 
+export interface Institution {
+  id: string;
+  name: string;
+  code: string;
+  city?: string | null;
+  active: boolean;
+  createdAt: string;
+  _count?: { members: number; reports: number };
+}
+
 export interface DeceMember {
   id: string;
   name: string;
   email: string;
   role: DeceRole;
   active: boolean;
+  institutionId: string | null;
+  institution?: { id: string; name: string; code: string } | null;
   createdAt: string;
   _count?: { assignedReports: number };
 }
@@ -50,6 +62,8 @@ export interface Report {
   id: string;
   reportNumber: number;
   telegramUserId: string;
+  institutionId: string | null;
+  institution?: { id: string; name: string; code: string } | null;
   informantType: InformantType;
   wantsContact: boolean;
   previousReport: boolean;
@@ -82,9 +96,18 @@ export interface Stats {
   urgent: number;
 }
 
+export interface CurrentUser {
+  id: string;
+  name: string;
+  email: string;
+  role: DeceRole | 'ADMIN';
+  institutionId: string | null;
+  isAdmin: boolean;
+}
+
 export interface AuthResponse {
   access_token: string;
-  member: Pick<DeceMember, 'id' | 'name' | 'email' | 'role'>;
+  user: CurrentUser;
 }
 
 export const LABELS = {

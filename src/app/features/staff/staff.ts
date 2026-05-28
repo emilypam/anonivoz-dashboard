@@ -10,13 +10,15 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ApiService } from '../../core/services/api.service';
-import { DeceMember, LABELS, DeceRole } from '../../core/models';
+import { AuthService } from '../../core/services/auth.service';
+import { DeceMember, Institution, LABELS, DeceRole } from '../../core/models';
 
 interface NewMemberForm {
   name: string;
   email: string;
   password: string;
   role: DeceRole;
+  institutionId: string;
 }
 
 @Component({
@@ -38,18 +40,22 @@ interface NewMemberForm {
 })
 export class StaffComponent implements OnInit {
   members = signal<DeceMember[]>([]);
+  institutions = signal<Institution[]>([]);
   loading = signal(true);
   showForm = signal(false);
   saving = signal(false);
   labels = LABELS;
+  isAdmin = false;
 
-  form: NewMemberForm = { name: '', email: '', password: '', role: 'COUNSELOR' };
+  form: NewMemberForm = { name: '', email: '', password: '', role: 'COUNSELOR', institutionId: '' };
   formError = signal('');
 
   editingId = signal<string | null>(null);
   editRole = '';
   editActive = true;
   savingEdit = signal(false);
+
+  filterInstitutionId = '';
 
   readonly roles: { value: DeceRole; label: string }[] = [
     { value: 'COUNSELOR', label: 'Consejero/a' },
@@ -59,16 +65,22 @@ export class StaffComponent implements OnInit {
 
   constructor(
     private api: ApiService,
+    private auth: AuthService,
     private snack: MatSnackBar,
   ) {}
 
   ngOnInit() {
+    this.isAdmin = this.auth.isAdmin();
+    if (this.isAdmin) {
+      this.api.getInstitutions().subscribe((list) => this.institutions.set(list));
+    }
     this.loadMembers();
   }
 
   loadMembers() {
     this.loading.set(true);
-    this.api.getMembers().subscribe((m) => {
+    const instId = this.isAdmin ? (this.filterInstitutionId || undefined) : undefined;
+    this.api.getMembers(instId).subscribe((m) => {
       this.members.set(m);
       this.loading.set(false);
     });
@@ -78,10 +90,13 @@ export class StaffComponent implements OnInit {
     if (!this.form.name || !this.form.email || !this.form.password) return;
     this.saving.set(true);
     this.formError.set('');
-    this.api.createMember(this.form).subscribe({
+    const payload = this.isAdmin
+      ? this.form
+      : { ...this.form, institutionId: undefined };
+    this.api.createMember(payload).subscribe({
       next: () => {
         this.snack.open('Miembro agregado correctamente', 'OK', { duration: 3000 });
-        this.form = { name: '', email: '', password: '', role: 'COUNSELOR' };
+        this.form = { name: '', email: '', password: '', role: 'COUNSELOR', institutionId: '' };
         this.showForm.set(false);
         this.saving.set(false);
         this.loadMembers();
@@ -125,5 +140,10 @@ export class StaffComponent implements OnInit {
     return new Date(d).toLocaleDateString('es-EC', {
       day: '2-digit', month: 'short', year: 'numeric',
     });
+  }
+
+  institutionName(id: string | null): string {
+    if (!id) return '—';
+    return this.institutions().find((i) => i.id === id)?.name ?? '—';
   }
 }

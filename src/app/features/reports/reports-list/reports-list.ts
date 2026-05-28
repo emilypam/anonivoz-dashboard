@@ -9,7 +9,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ApiService } from '../../../core/services/api.service';
-import { Report, LABELS, ReportStatus, Priority, HarassmentType } from '../../../core/models';
+import { AuthService } from '../../../core/services/auth.service';
+import { Report, Institution, LABELS, ReportStatus, Priority, HarassmentType } from '../../../core/models';
 
 const PAGE_SIZE = 20;
 
@@ -30,14 +31,17 @@ const PAGE_SIZE = 20;
 })
 export class ReportsListComponent implements OnInit {
   reports = signal<Report[]>([]);
+  institutions = signal<Institution[]>([]);
   total = signal(0);
   loading = signal(true);
   labels = LABELS;
+  isAdmin = false;
 
   // Filters
   filterStatus = '';
   filterPriority = '';
   filterType = '';
+  filterInstitutionId = '';
   page = 0;
 
   readonly statuses: { value: ReportStatus | ''; label: string }[] = [
@@ -66,10 +70,15 @@ export class ReportsListComponent implements OnInit {
 
   constructor(
     private api: ApiService,
+    private auth: AuthService,
     private router: Router,
   ) {}
 
   ngOnInit() {
+    this.isAdmin = this.auth.isAdmin();
+    if (this.isAdmin) {
+      this.api.getInstitutions().subscribe((list) => this.institutions.set(list));
+    }
     this.load();
   }
 
@@ -82,6 +91,7 @@ export class ReportsListComponent implements OnInit {
         status: this.filterStatus || undefined,
         priority: this.filterPriority || undefined,
         harassmentType: this.filterType || undefined,
+        institutionId: this.isAdmin ? (this.filterInstitutionId || undefined) : undefined,
       })
       .subscribe((res) => {
         this.reports.set(res.data);
@@ -99,6 +109,7 @@ export class ReportsListComponent implements OnInit {
     this.filterStatus = '';
     this.filterPriority = '';
     this.filterType = '';
+    this.filterInstitutionId = '';
     this.page = 0;
     this.load();
   }

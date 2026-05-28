@@ -24,7 +24,7 @@
         <div class="avatar">{{ initials() }}</div>
         <div class="user-details">
           <span class="user-name">{{ user()?.name }}</span>
-          <span class="user-role">{{ user()?.role }}</span>
+          <span class="user-role">{{ roleLabel() }}</span>
         </div>
       </div>
       <button mat-icon-button class="logout-btn" (click)="logout()" title="Cerrar sesión">

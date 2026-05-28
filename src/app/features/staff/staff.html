@@ -44,6 +44,18 @@
           }
         </mat-select>
       </mat-form-field>
+
+      @if (isAdmin) {
+        <mat-form-field appearance="fill">
+          <mat-label>Institución</mat-label>
+          <mat-select [(ngModel)]="form.institutionId">
+            <mat-option value="">Sin asignar</mat-option>
+            @for (inst of institutions(); track inst.id) {
+              <mat-option [value]="inst.id">{{ inst.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      }
     </div>
 
     <div class="form-actions">
@@ -61,6 +73,21 @@
   </div>
 }
 
+<!-- Institution filter (admin only) -->
+@if (isAdmin) {
+  <div class="filter-bar">
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Filtrar por institución</mat-label>
+      <mat-select [(ngModel)]="filterInstitutionId" (ngModelChange)="loadMembers()">
+        <mat-option value="">Todas</mat-option>
+        @for (inst of institutions(); track inst.id) {
+          <mat-option [value]="inst.id">{{ inst.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+}
+
 <!-- Members table -->
 <div class="card table-card">
   @if (loading()) {
@@ -74,6 +101,7 @@
           <th>Nombre</th>
           <th>Correo</th>
           <th>Rol</th>
+          @if (isAdmin) { <th>Institución</th> }
           <th>Estado</th>
           <th>Denuncias</th>
           <th>Creado</th>
@@ -96,6 +124,7 @@
                   </mat-select>
                 </mat-form-field>
               </td>
+              @if (isAdmin) { <td>{{ institutionName(m.institutionId) }}</td> }
               <td>
                 <mat-slide-toggle [(ngModel)]="editActive" color="primary">
                   {{ editActive ? 'Activo' : 'Inactivo' }}
@@ -103,6 +132,7 @@
               </td>
             } @else {
               <td>{{ roleLabel(m.role) }}</td>
+              @if (isAdmin) { <td class="inst-col">{{ m.institution?.name ?? '—' }}</td> }
               <td>
                 <span class="status-dot" [class.active]="m.active">
                   {{ m.active ? 'Activo' : 'Inactivo' }}
@@ -130,7 +160,7 @@
           </tr>
         } @empty {
           <tr>
-            <td colspan="7" class="empty-row">No hay miembros registrados.</td>
+            <td [attr.colspan]="isAdmin ? 8 : 7" class="empty-row">No hay miembros registrados.</td>
           </tr>
         }
       </tbody>
