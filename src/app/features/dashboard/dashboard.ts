@@ -3,12 +3,21 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
 import { ApiService } from '../../core/services/api.service';
 import { Report, Stats, LABELS } from '../../core/models';
 
+interface StatCard {
+  label: string;
+  value: number;
+  sub: string;
+  icon: string;
+  color: string;
+}
+
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, MatIconModule, MatProgressSpinnerModule],
+  imports: [CommonModule, MatIconModule, MatProgressSpinnerModule, MatButtonModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
@@ -18,7 +27,7 @@ export class DashboardComponent implements OnInit {
   loading = signal(true);
   labels = LABELS;
 
-  statCards = signal<{ label: string; value: number; sub: string; accent: boolean }[]>([]);
+  statCards = signal<StatCard[]>([]);
 
   constructor(
     private api: ApiService,
@@ -29,10 +38,10 @@ export class DashboardComponent implements OnInit {
     this.api.getStats().subscribe((s) => {
       this.stats.set(s);
       this.statCards.set([
-        { label: 'Total de denuncias', value: s.total, sub: 'acumuladas', accent: false },
-        { label: 'Últimos 7 días', value: s.last7Days, sub: 'nuevas', accent: false },
-        { label: 'Pendientes', value: s.pending, sub: 'sin atender', accent: s.pending > 0 },
-        { label: 'Urgentes', value: s.urgent, sub: 'requieren atención inmediata', accent: s.urgent > 0 },
+        { label: 'Total de denuncias', value: s.total,     sub: 'acumuladas',              icon: 'folder_open',     color: 'blue'   },
+        { label: 'Últimos 7 días',     value: s.last7Days, sub: 'nuevas esta semana',       icon: 'calendar_today',  color: 'teal'   },
+        { label: 'Pendientes',         value: s.pending,   sub: 'sin atender',              icon: 'hourglass_empty', color: s.pending > 0 ? 'orange' : 'teal' },
+        { label: 'Urgentes',           value: s.urgent,    sub: 'requieren atención',       icon: 'warning',         color: s.urgent > 0  ? 'red'    : 'teal' },
       ]);
     });
 
@@ -44,6 +53,10 @@ export class DashboardComponent implements OnInit {
 
   openReport(id: string) {
     this.router.navigate(['/reports', id]);
+  }
+
+  goToReports() {
+    this.router.navigate(['/reports']);
   }
 
   harassment(type: string) {
@@ -69,21 +82,28 @@ export class DashboardComponent implements OnInit {
   harassmentEntries() {
     const s = this.stats();
     if (!s) return [];
-    return Object.entries(s.byHarassmentType).map(([k, v]) => ({
-      label: this.harassment(k),
-      value: v,
-      pct: s.total > 0 ? Math.round((v / s.total) * 100) : 0,
-    })).sort((a, b) => b.value - a.value);
+    return Object.entries(s.byHarassmentType)
+      .map(([k, v]) => ({
+        label: this.harassment(k),
+        value: v as number,
+        pct: s.total > 0 ? Math.round(((v as number) / s.total) * 100) : 0,
+      }))
+      .sort((a, b) => b.value - a.value);
   }
 
   statusEntries() {
     const s = this.stats();
     if (!s) return [];
     const order = ['PENDING', 'IN_REVIEW', 'RESOLVED', 'DISMISSED'];
-    return order.map((k) => ({
-      key: k,
-      label: this.statusLabel(k),
-      value: s.byStatus[k as keyof typeof s.byStatus] ?? 0,
-    }));
+    const total = s.total || 1;
+    return order.map((k) => {
+      const value = (s.byStatus as Record<string, number>)[k] ?? 0;
+      return {
+        key: k,
+        label: this.statusLabel(k),
+        value,
+        pct: Math.round((value / total) * 100),
+      };
+    });
   }
 }
