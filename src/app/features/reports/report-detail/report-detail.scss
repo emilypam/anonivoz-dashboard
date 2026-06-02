@@ -4,7 +4,7 @@
   padding: 80px 0;
 }
 
-// ── Header ────────────────────────────────────────────────────────────────────
+// Header
 .detail-header {
   display: flex;
   align-items: flex-start;
@@ -39,7 +39,7 @@
   }
 }
 
-// ── Layout ────────────────────────────────────────────────────────────────────
+// Layout
 .detail-layout {
   display: grid;
   grid-template-columns: 1fr 280px;
@@ -51,7 +51,7 @@
   min-width: 0;
 }
 
-// ── Tabs ──────────────────────────────────────────────────────────────────────
+// Tabs
 .tab-bar {
   display: flex;
   gap: 0;
@@ -93,7 +93,7 @@
   line-height: 1.4;
 }
 
-// ── Tab content ───────────────────────────────────────────────────────────────
+// Tab content
 .tab-content {
   padding: 24px;
 }
@@ -308,7 +308,7 @@
   padding: 16px 0;
 }
 
-// ── Sidebar cards ─────────────────────────────────────────────────────────────
+// Sidebar cards
 .detail-sidebar {
   display: flex;
   flex-direction: column;

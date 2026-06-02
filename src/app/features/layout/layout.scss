@@ -4,7 +4,7 @@
   overflow: hidden;
 }
 
-// ── Sidebar ───────────────────────────────────────────────────────────────────
+// Sidebar
 .sidebar {
   width: 220px;
   min-width: 220px;
@@ -89,7 +89,7 @@
   }
 }
 
-// ── Footer ────────────────────────────────────────────────────────────────────
+// Footer
 .sidebar-footer {
   padding: 14px 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
@@ -150,7 +150,7 @@
   &:hover { color: #e2e8f0 !important; }
 }
 
-// ── Main area ─────────────────────────────────────────────────────────────────
+// Main area
 .main {
   flex: 1;
   overflow-y: auto;

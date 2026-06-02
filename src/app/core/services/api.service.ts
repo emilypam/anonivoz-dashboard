@@ -9,7 +9,7 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  // ── Reportes ──────────────────────────────────────────────────────────────
+  // Reportes
 
   getReports(params: {
     limit?: number;
@@ -51,7 +51,7 @@ export class ApiService {
     return this.http.post(`${this.base}/api/reports/${id}/notes`, { content });
   }
 
-  // ── Miembros DECE ─────────────────────────────────────────────────────────
+  // Miembros DECE
 
   getMembers(institutionId?: string) {
     let p = new HttpParams();
@@ -71,7 +71,7 @@ export class ApiService {
     return this.http.patch(`${this.base}/dece/members/${id}/password`, { password });
   }
 
-  // ── Instituciones ─────────────────────────────────────────────────────────
+  // Instituciones
 
   getInstitutions() {
     return this.http.get<Institution[]>(`${this.base}/institutions`);
@@ -89,7 +89,7 @@ export class ApiService {
     return this.http.patch<Institution>(`${this.base}/institutions/${id}`, data);
   }
 
-  // ── Auth bootstrap ────────────────────────────────────────────────────────
+  // Auth bootstrap
 
   bootstrapAdmin(data: { name: string; email: string; password: string; key: string }) {
     return this.http.post(`${this.base}/auth/admin/bootstrap`, data);

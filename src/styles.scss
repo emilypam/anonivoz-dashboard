@@ -1,6 +1,6 @@
 @use '@angular/material' as mat;
 
-// ── Material dark theme — azul cobalto institucional ──────────────────────────
+// Material dark theme — azul cobalto institucional
 @include mat.core();
 
 $primary-palette: mat.m2-define-palette(mat.$m2-blue-palette, 600, 400, 800);
@@ -21,30 +21,30 @@ $theme: mat.m2-define-dark-theme((
 
 @include mat.all-component-themes($theme);
 
-// ── Design tokens — paleta Modo Oscuro (WCAG AA) ──────────────────────────────
+// Design tokens — paleta Modo Oscuro (WCAG AA)
 :root {
-  // ── Superficies ──────────────────────────────────────────────────────────────
+  // Superficies
   --content-bg:    #0F172A;   // azul pizarra extremadamente oscuro
   --card-bg:       #1E293B;   // superficie de tarjetas
   --card-elevated: #0F172A;   // superficies anidadas (ej. th de tabla)
   --border:        #334155;   // bordes y separadores
 
-  // ── Sidebar ──────────────────────────────────────────────────────────────────
+  // Sidebar
   --sidebar-bg:          #0B1120;
   --sidebar-hover:       rgba(255, 255, 255, 0.06);
   --sidebar-active:      #2563EB;
   --sidebar-text:        #94A3B8;
   --sidebar-text-active: #FFFFFF;
 
-  // ── Tipografía ───────────────────────────────────────────────────────────────
+  // Tipografía
   --text-primary:   #F8FAFC;
   --text-secondary: #94A3B8;
 
-  // ── Acento — azul cobalto/digital ────────────────────────────────────────────
+  // Acento — azul cobalto/digital
   --accent:      #2563EB;
   --accent-dark: #1D4ED8;
 
-  // ── Colores semánticos — estados ─────────────────────────────────────────────
+  // Colores semánticos — estados
   --status-pending-bg:     rgba(249, 115, 22, 0.15);
   --status-pending-text:   #FB923C;
   --status-in-review-bg:   rgba(99, 102, 241, 0.15);
@@ -54,7 +54,7 @@ $theme: mat.m2-define-dark-theme((
   --status-dismissed-bg:   rgba(148, 163, 184, 0.10);
   --status-dismissed-text: #94A3B8;
 
-  // ── Colores semánticos — prioridades ─────────────────────────────────────────
+  // Colores semánticos — prioridades
   --priority-low-bg:      rgba(148, 163, 184, 0.10);
   --priority-low-text:    #94A3B8;
   --priority-medium-bg:   rgba(37, 99, 235, 0.15);
@@ -65,7 +65,7 @@ $theme: mat.m2-define-dark-theme((
   --priority-urgent-text: #FCA5A5;
 }
 
-// ── Reset & base ──────────────────────────────────────────────────────────────
+// Reset & base
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
@@ -77,7 +77,7 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
-// ── Badges ────────────────────────────────────────────────────────────────────
+// Badges
 .badge {
   display: inline-flex;
   align-items: center;
@@ -99,7 +99,7 @@ html, body {
   &.priority-URGENT { background: var(--priority-urgent-bg); color: var(--priority-urgent-text); border: 1px solid rgba(239, 68, 68, 0.35); }
 }
 
-// ── Card ──────────────────────────────────────────────────────────────────────
+// Card
 .card {
   background: var(--card-bg);
   border: 1px solid var(--border);
@@ -107,14 +107,14 @@ html, body {
   padding: 24px;
 }
 
-// ── Page header ───────────────────────────────────────────────────────────────
+// Page header
 .page-header {
   margin-bottom: 24px;
   h1 { font-size: 20px; font-weight: 600; color: var(--text-primary); }
   p  { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
 }
 
-// ── Table ─────────────────────────────────────────────────────────────────────
+// Table
 .data-table {
   width: 100%;
   border-collapse: collapse;
@@ -144,7 +144,7 @@ html, body {
   }
 }
 
-// ── Material overrides — dark mode ────────────────────────────────────────────
+// Material overrides — dark mode
 .mat-mdc-form-field { font-family: 'Inter', sans-serif !important; }
 
 .mdc-text-field--filled:not(.mdc-text-field--disabled) {
@@ -172,7 +172,7 @@ html, body {
   &:hover:not(.mdc-list-item--disabled) { background: rgba(255, 255, 255, 0.05) !important; }
 }
 
-// ── Scrollbar ─────────────────────────────────────────────────────────────────
+// Scrollbar
 ::-webkit-scrollbar               { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track         { background: transparent; }
 ::-webkit-scrollbar-thumb         { background: #334155; border-radius: 3px; }
