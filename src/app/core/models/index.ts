@@ -110,6 +110,36 @@ export interface AuthResponse {
   user: CurrentUser;
 }
 
+export interface BotUsageTimeline {
+  date: string;
+  starts: number;
+  reportStarts: number;
+  reportCompleted: number;
+}
+
+export interface BotUsageByInstitution {
+  institutionId: string;
+  name: string;
+  starts: number;
+  reportCompleted: number;
+  reportAbandoned: number;
+}
+
+export interface BotUsageStats {
+  totalUniqueUsers: number;
+  usersLast7Days: number;
+  usersLast30Days: number;
+  totalStarts: number;
+  totalReportStarts: number;
+  totalReportCompleted: number;
+  totalReportAbandoned: number;
+  totalSupportSessions: number;
+  completionRate: number;
+  abandonRate: number;
+  timeline: BotUsageTimeline[];
+  byInstitution: BotUsageByInstitution[];
+}
+
 export const LABELS = {
   status: {
     PENDING: 'Pendiente',

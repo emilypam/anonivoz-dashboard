@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { Report, ReportList, Stats, DeceMember, Institution, ReportStatus, Priority } from '../models';
+import { Report, ReportList, Stats, DeceMember, Institution, ReportStatus, Priority, BotUsageStats } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -87,6 +87,12 @@ export class ApiService {
 
   updateInstitution(id: string, data: { name?: string; city?: string; code?: string; active?: boolean }) {
     return this.http.patch<Institution>(`${this.base}/institutions/${id}`, data);
+  }
+
+  // Analytics
+
+  getBotUsage() {
+    return this.http.get<BotUsageStats>(`${this.base}/analytics/bot-usage`);
   }
 
   // Auth bootstrap

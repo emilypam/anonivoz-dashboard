@@ -23,6 +23,7 @@ export class LayoutComponent {
     { path: '/reports', label: 'Denuncias', icon: 'folder_open' },
     { path: '/staff', label: 'Personal DECE', icon: 'group' },
     { path: '/institutions', label: 'Instituciones', icon: 'apartment', adminOnly: true },
+    { path: '/analytics', label: 'Uso del Bot', icon: 'bar_chart', adminOnly: true },
   ];
 
   user = computed(() => this.auth.currentUser());

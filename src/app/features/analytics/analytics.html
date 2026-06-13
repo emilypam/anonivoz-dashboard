@@ -1,0 +1,198 @@
+@if (loading()) {
+  <div class="spinner-wrap">
+    <mat-spinner diameter="40" />
+  </div>
+} @else if (error()) {
+  <div class="error-msg">
+    <mat-icon>error_outline</mat-icon>
+    {{ error() }}
+  </div>
+} @else if (stats(); as s) {
+
+  <!-- Encabezado -->
+  <div class="page-header">
+    <div class="page-title">
+      <mat-icon>bar_chart</mat-icon>
+      <div>
+        <h2>Uso del Bot</h2>
+        <p>Estadísticas de acceso y conversión de estudiantes en Telegram</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tarjetas de métricas principales -->
+  <div class="stat-grid">
+    <div class="stat-card card-blue">
+      <div class="stat-icon"><mat-icon>people</mat-icon></div>
+      <div class="stat-body">
+        <div class="stat-value">{{ s.totalUniqueUsers }}</div>
+        <div class="stat-label">Usuarios únicos</div>
+        <div class="stat-sub">{{ s.usersLast7Days }} esta semana · {{ s.usersLast30Days }} este mes</div>
+      </div>
+    </div>
+
+    <div class="stat-card card-teal">
+      <div class="stat-icon"><mat-icon>login</mat-icon></div>
+      <div class="stat-body">
+        <div class="stat-value">{{ s.totalStarts }}</div>
+        <div class="stat-label">Ingresos totales</div>
+        <div class="stat-sub">Veces que se abrió el bot</div>
+      </div>
+    </div>
+
+    <div class="stat-card card-purple">
+      <div class="stat-icon"><mat-icon>assignment</mat-icon></div>
+      <div class="stat-body">
+        <div class="stat-value">{{ s.totalReportStarts }}</div>
+        <div class="stat-label">Denuncias iniciadas</div>
+        <div class="stat-sub">{{ s.totalReportCompleted }} completadas · {{ s.totalReportAbandoned }} abandonadas</div>
+      </div>
+    </div>
+
+    <div class="stat-card" [class]="s.completionRate >= 50 ? 'card-green' : 'card-orange'">
+      <div class="stat-icon"><mat-icon>check_circle</mat-icon></div>
+      <div class="stat-body">
+        <div class="stat-value">{{ s.completionRate }}%</div>
+        <div class="stat-label">Tasa de completación</div>
+        <div class="stat-sub">{{ s.abandonRate }}% abandonadas</div>
+      </div>
+    </div>
+
+    <div class="stat-card card-indigo">
+      <div class="stat-icon"><mat-icon>favorite</mat-icon></div>
+      <div class="stat-body">
+        <div class="stat-value">{{ s.totalSupportSessions }}</div>
+        <div class="stat-label">Sesiones de apoyo</div>
+        <div class="stat-sub">Conversaciones con AI</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel: Embudo + Por institución -->
+  <div class="panels">
+
+    <!-- Embudo de conversión -->
+    <div class="card panel">
+      <div class="panel-head">
+        <mat-icon>filter_alt</mat-icon>
+        <h3>Embudo de conversión</h3>
+      </div>
+      <div class="funnel-list">
+        <div class="funnel-step">
+          <div class="funnel-info">
+            <span class="funnel-label">Ingresos al bot</span>
+            <span class="funnel-count">{{ s.totalStarts }}</span>
+          </div>
+          <div class="funnel-track">
+            <div class="funnel-fill fill-starts" style="width: 100%"></div>
+          </div>
+          <div class="funnel-pct">100%</div>
+        </div>
+
+        <div class="funnel-step">
+          <div class="funnel-info">
+            <span class="funnel-label">Denuncia iniciada</span>
+            <span class="funnel-count">{{ s.totalReportStarts }}</span>
+          </div>
+          <div class="funnel-track">
+            <div class="funnel-fill fill-started" [style.width.%]="funnelPct(s.totalReportStarts)"></div>
+          </div>
+          <div class="funnel-pct">{{ funnelPct(s.totalReportStarts) }}%</div>
+        </div>
+
+        <div class="funnel-step">
+          <div class="funnel-info">
+            <span class="funnel-label">Denuncia completada</span>
+            <span class="funnel-count">{{ s.totalReportCompleted }}</span>
+          </div>
+          <div class="funnel-track">
+            <div class="funnel-fill fill-completed" [style.width.%]="funnelPct(s.totalReportCompleted)"></div>
+          </div>
+          <div class="funnel-pct">{{ funnelPct(s.totalReportCompleted) }}%</div>
+        </div>
+
+        <div class="funnel-step">
+          <div class="funnel-info">
+            <span class="funnel-label">Denuncia abandonada</span>
+            <span class="funnel-count">{{ s.totalReportAbandoned }}</span>
+          </div>
+          <div class="funnel-track">
+            <div class="funnel-fill fill-abandoned" [style.width.%]="funnelPct(s.totalReportAbandoned)"></div>
+          </div>
+          <div class="funnel-pct">{{ funnelPct(s.totalReportAbandoned) }}%</div>
+        </div>
+
+        <div class="funnel-step">
+          <div class="funnel-info">
+            <span class="funnel-label">Apoyo emocional</span>
+            <span class="funnel-count">{{ s.totalSupportSessions }}</span>
+          </div>
+          <div class="funnel-track">
+            <div class="funnel-fill fill-support" [style.width.%]="funnelPct(s.totalSupportSessions)"></div>
+          </div>
+          <div class="funnel-pct">{{ funnelPct(s.totalSupportSessions) }}%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Por institución -->
+    <div class="card panel">
+      <div class="panel-head">
+        <mat-icon>apartment</mat-icon>
+        <h3>Por institución</h3>
+      </div>
+      @if (!s.byInstitution.length) {
+        <p class="panel-empty">Sin datos por institución aún.</p>
+      } @else {
+        <div class="inst-table">
+          <div class="inst-header">
+            <span>Institución</span>
+            <span>Ingresos</span>
+            <span>Completadas</span>
+            <span>% Completación</span>
+          </div>
+          @for (inst of s.byInstitution; track trackByInst($index, inst)) {
+            @if (inst.starts > 0) {
+              <div class="inst-row">
+                <span class="inst-name">{{ inst.name }}</span>
+                <span class="inst-num">{{ inst.starts }}</span>
+                <span class="inst-num completed">{{ inst.reportCompleted }}</span>
+                <span class="inst-badge" [class]="instCompletionPct(inst) >= 50 ? 'badge-green' : 'badge-orange'">
+                  {{ instCompletionPct(inst) }}%
+                </span>
+              </div>
+            }
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Timeline: últimos 30 días -->
+  <div class="card timeline-card">
+    <div class="panel-head">
+      <mat-icon>timeline</mat-icon>
+      <h3>Actividad — últimos 30 días</h3>
+    </div>
+
+    <div class="timeline-legend">
+      <span class="leg leg-starts">Ingresos</span>
+      <span class="leg leg-started">Iniciadas</span>
+      <span class="leg leg-completed">Completadas</span>
+    </div>
+
+    <div class="timeline-chart">
+      @for (day of s.timeline; track trackByDate($index, day)) {
+        <div class="day-col">
+          <div class="bars">
+            <div class="bar bar-starts" [style.height.%]="timelinePct(day.starts)" [title]="'Ingresos: ' + day.starts"></div>
+            <div class="bar bar-started" [style.height.%]="timelinePct(day.reportStarts)" [title]="'Iniciadas: ' + day.reportStarts"></div>
+            <div class="bar bar-completed" [style.height.%]="timelinePct(day.reportCompleted)" [title]="'Completadas: ' + day.reportCompleted"></div>
+          </div>
+          <div class="day-label">{{ formatDate(day.date) }}</div>
+        </div>
+      }
+    </div>
+  </div>
+
+}
