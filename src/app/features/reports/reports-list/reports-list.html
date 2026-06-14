@@ -1,6 +1,19 @@
 <div class="page-header">
-  <h1>Denuncias</h1>
-  <p>{{ total() }} {{ total() === 1 ? 'denuncia registrada' : 'denuncias registradas' }}</p>
+  <div>
+    <h1>Denuncias</h1>
+    <p>{{ total() }} {{ total() === 1 ? 'denuncia registrada' : 'denuncias registradas' }}</p>
+  </div>
+  <form class="report-search" (ngSubmit)="searchByNumber()">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Ir a reporte #</mat-label>
+      <mat-icon matPrefix>tag</mat-icon>
+      <input matInput type="number" min="1" [(ngModel)]="searchNumber" name="searchNumber" placeholder="42">
+    </mat-form-field>
+    <button mat-flat-button type="submit" [disabled]="!searchNumber">Ir</button>
+    @if (searchNotFound) {
+      <span class="search-error">No encontrado</span>
+    }
+  </form>
 </div>
 
 <!-- Filters -->

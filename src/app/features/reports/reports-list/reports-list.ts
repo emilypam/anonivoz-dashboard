@@ -37,6 +37,10 @@ export class ReportsListComponent implements OnInit {
   labels = LABELS;
   isAdmin = false;
 
+  // Búsqueda directa por número
+  searchNumber: number | null = null;
+  searchNotFound = false;
+
   // Filters
   filterStatus = '';
   filterPriority = '';
@@ -126,6 +130,15 @@ export class ReportsListComponent implements OnInit {
 
   nextPage() {
     if ((this.page + 1) * PAGE_SIZE < this.total()) { this.page++; this.load(); }
+  }
+
+  searchByNumber() {
+    if (!this.searchNumber) return;
+    this.searchNotFound = false;
+    this.api.getReportByNumber(this.searchNumber).subscribe({
+      next: (r) => this.router.navigate(['/reports', r.id]),
+      error: () => { this.searchNotFound = true; },
+    });
   }
 
   openReport(id: string) {

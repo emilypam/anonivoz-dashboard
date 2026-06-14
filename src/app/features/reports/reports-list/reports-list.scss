@@ -1,3 +1,27 @@
+:host .page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.report-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  mat-form-field {
+    width: 160px;
+  }
+
+  .search-error {
+    font-size: 12px;
+    color: var(--warn, #e53935);
+    white-space: nowrap;
+  }
+}
+
 .filters-bar {
   display: flex;
   align-items: center;

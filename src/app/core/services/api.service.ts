@@ -33,6 +33,10 @@ export class ApiService {
     return this.http.get<Report>(`${this.base}/api/reports/${id}`);
   }
 
+  getReportByNumber(n: number) {
+    return this.http.get<Report>(`${this.base}/api/reports/number/${n}`);
+  }
+
   getStats() {
     return this.http.get<Stats>(`${this.base}/api/reports/stats`);
   }
