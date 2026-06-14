@@ -44,7 +44,17 @@
     </mat-form-field>
   }
 
-  @if (filterStatus || filterPriority || filterType || filterInstitutionId) {
+  <mat-form-field appearance="fill" subscriptSizing="dynamic">
+    <mat-label>Desde</mat-label>
+    <input matInput type="date" [(ngModel)]="filterDateFrom" (ngModelChange)="applyFilters()">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" subscriptSizing="dynamic">
+    <mat-label>Hasta</mat-label>
+    <input matInput type="date" [(ngModel)]="filterDateTo" (ngModelChange)="applyFilters()">
+  </mat-form-field>
+
+  @if (filterStatus || filterPriority || filterType || filterInstitutionId || filterDateFrom || filterDateTo) {
     <button mat-stroked-button (click)="clearFilters()">
       <mat-icon>close</mat-icon>
       Limpiar filtros

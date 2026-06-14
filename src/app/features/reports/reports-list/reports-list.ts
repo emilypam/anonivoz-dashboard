@@ -42,6 +42,8 @@ export class ReportsListComponent implements OnInit {
   filterPriority = '';
   filterType = '';
   filterInstitutionId = '';
+  filterDateFrom = '';
+  filterDateTo = '';
   page = 0;
 
   readonly statuses: { value: ReportStatus | ''; label: string }[] = [
@@ -92,6 +94,8 @@ export class ReportsListComponent implements OnInit {
         priority: this.filterPriority || undefined,
         harassmentType: this.filterType || undefined,
         institutionId: this.isAdmin ? (this.filterInstitutionId || undefined) : undefined,
+        dateFrom: this.filterDateFrom || undefined,
+        dateTo: this.filterDateTo || undefined,
       })
       .subscribe((res) => {
         this.reports.set(res.data);
@@ -110,6 +114,8 @@ export class ReportsListComponent implements OnInit {
     this.filterPriority = '';
     this.filterType = '';
     this.filterInstitutionId = '';
+    this.filterDateFrom = '';
+    this.filterDateTo = '';
     this.page = 0;
     this.load();
   }

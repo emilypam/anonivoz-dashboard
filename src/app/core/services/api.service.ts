@@ -19,6 +19,8 @@ export class ApiService {
     harassmentType?: string;
     assignedToId?: string;
     institutionId?: string;
+    dateFrom?: string;
+    dateTo?: string;
   }) {
     let p = new HttpParams();
     Object.entries(params).forEach(([k, v]) => {
