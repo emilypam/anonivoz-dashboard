@@ -29,6 +29,24 @@
         <div class="stat-label">Usuarios únicos</div>
         <div class="stat-sub">{{ s.usersLast7Days }} esta semana · {{ s.usersLast30Days }} este mes</div>
       </div>
+      <div class="stat-popup">
+        <div class="popup-title">Distribución temporal</div>
+        <div class="popup-row">
+          <span class="popup-label">Esta semana</span>
+          <div class="popup-track"><div class="popup-fill" [style.width.%]="miniPct(s.usersLast7Days, s.totalUniqueUsers)" style="background:#60A5FA"></div></div>
+          <span class="popup-val">{{ s.usersLast7Days }}</span>
+        </div>
+        <div class="popup-row">
+          <span class="popup-label">Este mes</span>
+          <div class="popup-track"><div class="popup-fill" [style.width.%]="miniPct(s.usersLast30Days, s.totalUniqueUsers)" style="background:#34D399"></div></div>
+          <span class="popup-val">{{ s.usersLast30Days }}</span>
+        </div>
+        <div class="popup-row">
+          <span class="popup-label">Total</span>
+          <div class="popup-track"><div class="popup-fill" style="width:100%; background:#475569"></div></div>
+          <span class="popup-val">{{ s.totalUniqueUsers }}</span>
+        </div>
+      </div>
     </div>
 
     <div class="stat-card card-teal">
@@ -37,6 +55,24 @@
         <div class="stat-value">{{ s.totalStarts }}</div>
         <div class="stat-label">Ingresos totales</div>
         <div class="stat-sub">Veces que se abrió el bot</div>
+      </div>
+      <div class="stat-popup">
+        <div class="popup-title">Qué hicieron al entrar</div>
+        <div class="popup-row">
+          <span class="popup-label">Iniciaron denuncia</span>
+          <div class="popup-track"><div class="popup-fill" [style.width.%]="miniPct(s.totalReportStarts, s.totalStarts)" style="background:#A78BFA"></div></div>
+          <span class="popup-val">{{ s.totalReportStarts }}</span>
+        </div>
+        <div class="popup-row">
+          <span class="popup-label">Completaron</span>
+          <div class="popup-track"><div class="popup-fill" [style.width.%]="miniPct(s.totalReportCompleted, s.totalStarts)" style="background:#34D399"></div></div>
+          <span class="popup-val">{{ s.totalReportCompleted }}</span>
+        </div>
+        <div class="popup-row">
+          <span class="popup-label">Apoyo emocional</span>
+          <div class="popup-track"><div class="popup-fill" [style.width.%]="miniPct(s.totalSupportSessions, s.totalStarts)" style="background:#818CF8"></div></div>
+          <span class="popup-val">{{ s.totalSupportSessions }}</span>
+        </div>
       </div>
     </div>
 
@@ -47,6 +83,19 @@
         <div class="stat-label">Denuncias iniciadas</div>
         <div class="stat-sub">{{ s.totalReportCompleted }} completadas · {{ s.totalReportAbandoned }} abandonadas</div>
       </div>
+      <div class="stat-popup">
+        <div class="popup-title">Resultado de denuncias</div>
+        <div class="popup-row">
+          <span class="popup-label">Completadas</span>
+          <div class="popup-track"><div class="popup-fill" [style.width.%]="miniPct(s.totalReportCompleted, s.totalReportStarts)" style="background:#34D399"></div></div>
+          <span class="popup-val">{{ s.totalReportCompleted }}</span>
+        </div>
+        <div class="popup-row">
+          <span class="popup-label">Abandonadas</span>
+          <div class="popup-track"><div class="popup-fill" [style.width.%]="miniPct(s.totalReportAbandoned, s.totalReportStarts)" style="background:#EF4444"></div></div>
+          <span class="popup-val">{{ s.totalReportAbandoned }}</span>
+        </div>
+      </div>
     </div>
 
     <div class="stat-card" [class]="s.completionRate >= 50 ? 'card-green' : 'card-orange'">
@@ -56,6 +105,19 @@
         <div class="stat-label">Tasa de completación</div>
         <div class="stat-sub">{{ s.abandonRate }}% abandonadas</div>
       </div>
+      <div class="stat-popup">
+        <div class="popup-title">Completadas vs abandonadas</div>
+        <div class="popup-row">
+          <span class="popup-label">Completadas</span>
+          <div class="popup-track"><div class="popup-fill" [style.width.%]="s.completionRate" style="background:#34D399"></div></div>
+          <span class="popup-val">{{ s.completionRate }}%</span>
+        </div>
+        <div class="popup-row">
+          <span class="popup-label">Abandonadas</span>
+          <div class="popup-track"><div class="popup-fill" [style.width.%]="s.abandonRate" style="background:#EF4444"></div></div>
+          <span class="popup-val">{{ s.abandonRate }}%</span>
+        </div>
+      </div>
     </div>
 
     <div class="stat-card card-indigo">
@@ -64,6 +126,19 @@
         <div class="stat-value">{{ s.totalSupportSessions }}</div>
         <div class="stat-label">Sesiones de apoyo</div>
         <div class="stat-sub">Conversaciones con AI</div>
+      </div>
+      <div class="stat-popup">
+        <div class="popup-title">Apoyo vs total ingresos</div>
+        <div class="popup-row">
+          <span class="popup-label">Apoyo emocional</span>
+          <div class="popup-track"><div class="popup-fill" [style.width.%]="miniPct(s.totalSupportSessions, s.totalStarts)" style="background:#818CF8"></div></div>
+          <span class="popup-val">{{ s.totalSupportSessions }}</span>
+        </div>
+        <div class="popup-row">
+          <span class="popup-label">Total ingresos</span>
+          <div class="popup-track"><div class="popup-fill" style="width:100%; background:#334155"></div></div>
+          <span class="popup-val">{{ s.totalStarts }}</span>
+        </div>
       </div>
     </div>
   </div>

@@ -42,6 +42,10 @@ export class AnalyticsComponent implements OnInit {
     });
   }
 
+  miniPct(value: number, max: number): number {
+    return max > 0 ? Math.round((value / max) * 100) : 0;
+  }
+
   funnelPct(value: number) {
     return Math.round((value / this.funnelMax()) * 100);
   }
