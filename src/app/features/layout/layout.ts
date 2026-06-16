@@ -1,8 +1,9 @@
-import { Component, computed } from '@angular/core';
+import { Component, computed, signal, OnInit, OnDestroy } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../core/services/auth.service';
+import { ApiService } from '../../core/services/api.service';
 
 interface NavItem {
   path: string;
@@ -17,7 +18,7 @@ interface NavItem {
   templateUrl: './layout.html',
   styleUrl: './layout.scss',
 })
-export class LayoutComponent {
+export class LayoutComponent implements OnInit, OnDestroy {
   private allNavItems: NavItem[] = [
     { path: '/dashboard', label: 'Resumen', icon: 'grid_view' },
     { path: '/reports', label: 'Denuncias', icon: 'folder_open' },
@@ -50,7 +51,23 @@ export class LayoutComponent {
     return map[u.role] ?? u.role;
   });
 
-  constructor(private auth: AuthService) {}
+  pendingCount = signal(0);
+  private refreshInterval?: ReturnType<typeof setInterval>;
+
+  constructor(private auth: AuthService, private api: ApiService) {}
+
+  ngOnInit() {
+    this.fetchPending();
+    this.refreshInterval = setInterval(() => this.fetchPending(), 60_000);
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.refreshInterval);
+  }
+
+  private fetchPending() {
+    this.api.getStats().subscribe({ next: (s) => this.pendingCount.set(s.pending), error: () => {} });
+  }
 
   logout() {
     this.auth.logout();
