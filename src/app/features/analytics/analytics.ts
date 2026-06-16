@@ -14,6 +14,7 @@ export class AnalyticsComponent implements OnInit {
   loading = signal(true);
   error = signal('');
   stats = signal<BotUsageStats | null>(null);
+  activeCard = signal<number | null>(null);
 
   funnelMax = computed(() => {
     const s = this.stats();

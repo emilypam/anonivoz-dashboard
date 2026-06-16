@@ -52,9 +52,11 @@
   grid-template-columns: repeat(5, 1fr);
   gap: 14px;
   margin-bottom: 20px;
+  overflow: visible;
 }
 
 .stat-card {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 14px;
@@ -67,6 +69,13 @@
   &:hover {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
     transform: translateY(-1px);
+    z-index: 10;
+  }
+
+  .stat-popup.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
   }
 
   .stat-icon {
@@ -104,13 +113,6 @@
   &.card-green  .stat-icon { background: rgba(16, 185, 129, 0.15);  mat-icon { color: #34D399; } }
   &.card-orange .stat-icon { background: rgba(249, 115, 22, 0.15);  mat-icon { color: #FB923C; } }
   &.card-indigo .stat-icon { background: rgba(99, 102, 241, 0.15);  mat-icon { color: #818CF8; } }
-
-  position: relative;
-
-  &:hover {
-    z-index: 10;
-    .stat-popup { opacity: 1; transform: translateY(0); pointer-events: auto; }
-  }
 
   .stat-popup {
     position: absolute;

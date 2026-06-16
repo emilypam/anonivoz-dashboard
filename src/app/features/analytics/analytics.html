@@ -22,14 +22,14 @@
 
   <!-- Tarjetas de métricas principales -->
   <div class="stat-grid">
-    <div class="stat-card card-blue">
+    <div class="stat-card card-blue" (mouseenter)="activeCard.set(0)" (mouseleave)="activeCard.set(null)">
       <div class="stat-icon"><mat-icon>people</mat-icon></div>
       <div class="stat-body">
         <div class="stat-value">{{ s.totalUniqueUsers }}</div>
         <div class="stat-label">Usuarios únicos</div>
         <div class="stat-sub">{{ s.usersLast7Days }} esta semana · {{ s.usersLast30Days }} este mes</div>
       </div>
-      <div class="stat-popup">
+      <div class="stat-popup" [class.visible]="activeCard() === 0">
         <div class="popup-title">Distribución temporal</div>
         <div class="popup-row">
           <span class="popup-label">Esta semana</span>
@@ -49,14 +49,14 @@
       </div>
     </div>
 
-    <div class="stat-card card-teal">
+    <div class="stat-card card-teal" (mouseenter)="activeCard.set(1)" (mouseleave)="activeCard.set(null)">
       <div class="stat-icon"><mat-icon>login</mat-icon></div>
       <div class="stat-body">
         <div class="stat-value">{{ s.totalStarts }}</div>
         <div class="stat-label">Ingresos totales</div>
         <div class="stat-sub">Veces que se abrió el bot</div>
       </div>
-      <div class="stat-popup">
+      <div class="stat-popup" [class.visible]="activeCard() === 1">
         <div class="popup-title">Qué hicieron al entrar</div>
         <div class="popup-row">
           <span class="popup-label">Iniciaron denuncia</span>
@@ -76,14 +76,14 @@
       </div>
     </div>
 
-    <div class="stat-card card-purple">
+    <div class="stat-card card-purple" (mouseenter)="activeCard.set(2)" (mouseleave)="activeCard.set(null)">
       <div class="stat-icon"><mat-icon>assignment</mat-icon></div>
       <div class="stat-body">
         <div class="stat-value">{{ s.totalReportStarts }}</div>
         <div class="stat-label">Denuncias iniciadas</div>
         <div class="stat-sub">{{ s.totalReportCompleted }} completadas · {{ s.totalReportAbandoned }} abandonadas</div>
       </div>
-      <div class="stat-popup">
+      <div class="stat-popup" [class.visible]="activeCard() === 2">
         <div class="popup-title">Resultado de denuncias</div>
         <div class="popup-row">
           <span class="popup-label">Completadas</span>
@@ -98,14 +98,14 @@
       </div>
     </div>
 
-    <div class="stat-card" [class]="s.completionRate >= 50 ? 'card-green' : 'card-orange'">
+    <div class="stat-card" [class]="'stat-card ' + (s.completionRate >= 50 ? 'card-green' : 'card-orange')" (mouseenter)="activeCard.set(3)" (mouseleave)="activeCard.set(null)">
       <div class="stat-icon"><mat-icon>check_circle</mat-icon></div>
       <div class="stat-body">
         <div class="stat-value">{{ s.completionRate }}%</div>
         <div class="stat-label">Tasa de completación</div>
         <div class="stat-sub">{{ s.abandonRate }}% abandonadas</div>
       </div>
-      <div class="stat-popup">
+      <div class="stat-popup" [class.visible]="activeCard() === 3">
         <div class="popup-title">Completadas vs abandonadas</div>
         <div class="popup-row">
           <span class="popup-label">Completadas</span>
@@ -120,14 +120,14 @@
       </div>
     </div>
 
-    <div class="stat-card card-indigo">
+    <div class="stat-card card-indigo" (mouseenter)="activeCard.set(4)" (mouseleave)="activeCard.set(null)">
       <div class="stat-icon"><mat-icon>favorite</mat-icon></div>
       <div class="stat-body">
         <div class="stat-value">{{ s.totalSupportSessions }}</div>
         <div class="stat-label">Sesiones de apoyo</div>
         <div class="stat-sub">Conversaciones con AI</div>
       </div>
-      <div class="stat-popup">
+      <div class="stat-popup" [class.visible]="activeCard() === 4">
         <div class="popup-title">Apoyo vs total ingresos</div>
         <div class="popup-row">
           <span class="popup-label">Apoyo emocional</span>
