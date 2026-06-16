@@ -16,6 +16,23 @@
           <div class="stat-label">{{ card.label }}</div>
           <div class="stat-sub">{{ card.sub }}</div>
         </div>
+
+        <div class="stat-popup">
+          <div class="popup-title">{{ card.popupTitle }}</div>
+          @for (entry of card.chart; track entry.label) {
+            <div class="popup-row">
+              <span class="popup-label">{{ entry.label }}</span>
+              <div class="popup-track">
+                <div
+                  class="popup-fill"
+                  [style.width.%]="popupPct(card.chart, entry.value)"
+                  [style.background]="entry.color"
+                ></div>
+              </div>
+              <span class="popup-val">{{ entry.value }}</span>
+            </div>
+          }
+        </div>
       </div>
     }
   </div>

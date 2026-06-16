@@ -7,12 +7,20 @@ import { MatButtonModule } from '@angular/material/button';
 import { ApiService } from '../../core/services/api.service';
 import { Report, Stats, LABELS } from '../../core/models';
 
+interface ChartEntry {
+  label: string;
+  value: number;
+  color: string;
+}
+
 interface StatCard {
   label: string;
   value: number;
   sub: string;
   icon: string;
   color: string;
+  popupTitle: string;
+  chart: ChartEntry[];
 }
 
 @Component({
@@ -38,10 +46,44 @@ export class DashboardComponent implements OnInit {
     this.api.getStats().subscribe((s) => {
       this.stats.set(s);
       this.statCards.set([
-        { label: 'Total de denuncias', value: s.total,     sub: 'acumuladas',              icon: 'folder_open',     color: 'blue'   },
-        { label: 'Últimos 7 días',     value: s.last7Days, sub: 'nuevas esta semana',       icon: 'calendar_today',  color: 'teal'   },
-        { label: 'Pendientes',         value: s.pending,   sub: 'sin atender',              icon: 'hourglass_empty', color: s.pending > 0 ? 'orange' : 'teal' },
-        { label: 'Urgentes',           value: s.urgent,    sub: 'requieren atención',       icon: 'warning',         color: s.urgent > 0  ? 'red'    : 'teal' },
+        {
+          label: 'Total de denuncias', value: s.total, sub: 'acumuladas', icon: 'folder_open', color: 'blue',
+          popupTitle: 'Por estado',
+          chart: [
+            { label: 'Pendiente',    value: s.byStatus['PENDING']    ?? 0, color: '#F97316' },
+            { label: 'En revisión',  value: s.byStatus['IN_REVIEW']  ?? 0, color: '#6366F1' },
+            { label: 'Resuelto',     value: s.byStatus['RESOLVED']   ?? 0, color: '#10B981' },
+            { label: 'Desestimado',  value: s.byStatus['DISMISSED']  ?? 0, color: '#475569' },
+          ],
+        },
+        {
+          label: 'Últimos 7 días', value: s.last7Days, sub: 'nuevas esta semana', icon: 'calendar_today', color: 'teal',
+          popupTitle: 'Esta semana vs anteriores',
+          chart: [
+            { label: 'Esta semana', value: s.last7Days,              color: '#34D399' },
+            { label: 'Anteriores',  value: s.total - s.last7Days,    color: '#334155' },
+          ],
+        },
+        {
+          label: 'Pendientes', value: s.pending, sub: 'sin atender', icon: 'hourglass_empty', color: s.pending > 0 ? 'orange' : 'teal',
+          popupTitle: 'Distribución por prioridad',
+          chart: [
+            { label: 'Urgente', value: s.byPriority['URGENT'] ?? 0, color: '#EF4444' },
+            { label: 'Alta',    value: s.byPriority['HIGH']   ?? 0, color: '#F97316' },
+            { label: 'Media',   value: s.byPriority['MEDIUM'] ?? 0, color: '#6366F1' },
+            { label: 'Baja',    value: s.byPriority['LOW']    ?? 0, color: '#475569' },
+          ],
+        },
+        {
+          label: 'Urgentes', value: s.urgent, sub: 'requieren atención', icon: 'warning', color: s.urgent > 0 ? 'red' : 'teal',
+          popupTitle: 'Tipo de acoso',
+          chart: [
+            { label: 'Físico',     value: s.byHarassmentType['PHYSICAL']      ?? 0, color: '#EF4444' },
+            { label: 'Ciberacoso', value: s.byHarassmentType['CYBERBULLYING'] ?? 0, color: '#6366F1' },
+            { label: 'Verbal',     value: s.byHarassmentType['VERBAL']        ?? 0, color: '#F97316' },
+            { label: 'Social',     value: s.byHarassmentType['SOCIAL']        ?? 0, color: '#10B981' },
+          ],
+        },
       ]);
     });
 
@@ -77,6 +119,11 @@ export class DashboardComponent implements OnInit {
       month: 'short',
       year: 'numeric',
     });
+  }
+
+  popupPct(chart: ChartEntry[], value: number): number {
+    const max = Math.max(...chart.map(e => e.value), 1);
+    return Math.round((value / max) * 100);
   }
 
   harassmentEntries() {
