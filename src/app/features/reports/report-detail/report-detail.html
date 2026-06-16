@@ -272,6 +272,29 @@
           Guardar asignación
         </button>
       </div>
+      @if (r.wantsContact) {
+        <div class="card sidebar-card contact-card">
+          <h3>
+            <mat-icon class="contact-icon">send</mat-icon>
+            Contactar denunciante
+          </h3>
+          <p class="contact-hint">El denunciante solicitó seguimiento. El mensaje llegará a su Telegram de forma anónima.</p>
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Escribe tu mensaje</mat-label>
+            <textarea matInput [(ngModel)]="contactMessage" rows="3" placeholder="Ej: Hemos revisado tu denuncia y nos pondremos en contacto esta semana..."></textarea>
+          </mat-form-field>
+          <button
+            mat-flat-button
+            color="primary"
+            class="full-width"
+            [disabled]="!contactMessage.trim() || sendingContact()"
+            (click)="sendContact()"
+          >
+            @if (sendingContact()) { <mat-spinner diameter="16" /> }
+            @else { Enviar por Telegram }
+          </button>
+        </div>
+      }
     </aside>
   </div>
 }

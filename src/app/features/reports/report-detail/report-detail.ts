@@ -51,6 +51,8 @@ export class ReportDetailComponent implements OnInit {
   statusNote = '';
   newNote = '';
   savingNote = signal(false);
+  contactMessage = '';
+  sendingContact = signal(false);
 
   readonly statuses: { value: ReportStatus; label: string }[] = [
     { value: 'PENDING', label: 'Pendiente' },
@@ -145,6 +147,23 @@ export class ReportDetailComponent implements OnInit {
         this.reload();
       },
       error: () => { this.savingNote.set(false); },
+    });
+  }
+
+  sendContact() {
+    const r = this.report();
+    if (!r || !this.contactMessage.trim() || this.sendingContact()) return;
+    this.sendingContact.set(true);
+    this.api.sendMessageToInformant(r.id, this.contactMessage.trim()).subscribe({
+      next: () => {
+        this.contactMessage = '';
+        this.sendingContact.set(false);
+        this.snack.open('Mensaje enviado por Telegram', 'OK', { duration: 3000 });
+      },
+      error: () => {
+        this.sendingContact.set(false);
+        this.snack.open('Error al enviar el mensaje', 'OK', { duration: 3000 });
+      },
     });
   }
 

@@ -37,6 +37,10 @@ export class ApiService {
     return this.http.get<Report>(`${this.base}/api/reports/number/${n}`);
   }
 
+  sendMessageToInformant(id: string, content: string) {
+    return this.http.post<{ sent: boolean; reason?: string }>(`${this.base}/api/reports/${id}/message`, { content });
+  }
+
   getStats() {
     return this.http.get<Stats>(`${this.base}/api/reports/stats`);
   }

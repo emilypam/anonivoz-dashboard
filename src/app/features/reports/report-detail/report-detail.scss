@@ -1,3 +1,27 @@
+.contact-card {
+  border: 1px solid rgba(37, 99, 235, 0.3);
+
+  h3 {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .contact-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: var(--accent);
+  }
+
+  .contact-hint {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin: -4px 0 12px;
+    line-height: 1.5;
+  }
+}
+
 .spinner-wrap {
   display: flex;
   justify-content: center;
