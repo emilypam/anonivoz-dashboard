@@ -8,6 +8,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApiService } from '../../../core/services/api.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Report, Institution, LABELS, ReportStatus, Priority, HarassmentType } from '../../../core/models';
@@ -25,6 +27,8 @@ const PAGE_SIZE = 20;
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatTooltipModule,
+    MatSnackBarModule,
   ],
   templateUrl: './reports-list.html',
   styleUrl: './reports-list.scss',
@@ -74,10 +78,13 @@ export class ReportsListComponent implements OnInit {
     { value: 'CYBERBULLYING', label: 'Ciberacoso' },
   ];
 
+  dismissing = signal<string | null>(null);
+
   constructor(
     private api: ApiService,
     private auth: AuthService,
     private router: Router,
+    private snack: MatSnackBar,
   ) {}
 
   ngOnInit() {
@@ -138,6 +145,23 @@ export class ReportsListComponent implements OnInit {
     this.api.getReportByNumber(this.searchNumber).subscribe({
       next: (r) => this.router.navigate(['/reports', r.id]),
       error: () => { this.searchNotFound = true; },
+    });
+  }
+
+  dismiss(id: string, event: Event) {
+    event.stopPropagation();
+    if (this.dismissing()) return;
+    this.dismissing.set(id);
+    this.api.updateStatus(id, 'DISMISSED').subscribe({
+      next: () => {
+        this.dismissing.set(null);
+        this.snack.open('Reporte desestimado', 'OK', { duration: 2500 });
+        this.load();
+      },
+      error: () => {
+        this.dismissing.set(null);
+        this.snack.open('Error al desestimar', 'OK', { duration: 2500 });
+      },
     });
   }
 

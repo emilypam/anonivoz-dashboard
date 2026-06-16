@@ -55,6 +55,26 @@
   white-space: nowrap;
 }
 
+.action-col {
+  width: 40px;
+  padding: 0 4px !important;
+  text-align: center;
+}
+
+.dismiss-btn {
+  opacity: 0;
+  color: var(--text-secondary) !important;
+  transition: opacity 0.15s, color 0.15s !important;
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+
+  &:hover { color: #ef4444 !important; }
+}
+
+tr:hover .dismiss-btn {
+  opacity: 1;
+}
+
 .empty-row {
   text-align: center;
   color: var(--text-secondary);

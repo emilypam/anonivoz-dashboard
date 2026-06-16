@@ -93,6 +93,7 @@
           <th>Prioridad</th>
           <th>Asignado a</th>
           <th>Fecha</th>
+          <th class="action-col"></th>
         </tr>
       </thead>
       <tbody>
@@ -106,10 +107,27 @@
             <td><span class="badge priority-{{ r.priority }}">{{ priorityLabel(r.priority) }}</span></td>
             <td>{{ r.assignedTo?.name ?? '—' }}</td>
             <td class="date-col">{{ formatDate(r.createdAt) }}</td>
+            <td class="action-col">
+              @if (r.status !== 'DISMISSED' && r.status !== 'RESOLVED') {
+                <button
+                  mat-icon-button
+                  class="dismiss-btn"
+                  matTooltip="Desestimar reporte"
+                  [disabled]="dismissing() === r.id"
+                  (click)="dismiss(r.id, $event)"
+                >
+                  @if (dismissing() === r.id) {
+                    <mat-spinner diameter="16" />
+                  } @else {
+                    <mat-icon>block</mat-icon>
+                  }
+                </button>
+              }
+            </td>
           </tr>
         } @empty {
           <tr>
-            <td [attr.colspan]="isAdmin ? 8 : 7" class="empty-row">No se encontraron denuncias con los filtros aplicados.</td>
+            <td [attr.colspan]="isAdmin ? 9 : 8" class="empty-row">No se encontraron denuncias con los filtros aplicados.</td>
           </tr>
         }
       </tbody>
