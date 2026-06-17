@@ -111,7 +111,15 @@
       <tbody>
         @for (m of members(); track m.id) {
           <tr [class.editing]="editingId() === m.id">
-            <td><strong>{{ m.name }}</strong></td>
+            <td>
+              @if (editingId() === m.id && isAdmin) {
+                <mat-form-field appearance="fill" subscriptSizing="dynamic" class="inline-field">
+                  <input matInput [(ngModel)]="editName" placeholder="Nombre" />
+                </mat-form-field>
+              } @else {
+                <strong>{{ m.name }}</strong>
+              }
+            </td>
             <td class="email-col">{{ m.email }}</td>
 
             @if (editingId() === m.id) {

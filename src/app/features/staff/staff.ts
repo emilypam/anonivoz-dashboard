@@ -51,6 +51,7 @@ export class StaffComponent implements OnInit {
   formError = signal('');
 
   editingId = signal<string | null>(null);
+  editName = '';
   editRole = '';
   editActive = true;
   savingEdit = signal(false);
@@ -110,13 +111,16 @@ export class StaffComponent implements OnInit {
 
   startEdit(m: DeceMember) {
     this.editingId.set(m.id);
+    this.editName = m.name;
     this.editRole = m.role;
     this.editActive = m.active;
   }
 
   saveEdit(id: string) {
     this.savingEdit.set(true);
-    this.api.updateMember(id, { role: this.editRole as DeceRole, active: this.editActive })
+    const payload: any = { role: this.editRole as DeceRole, active: this.editActive };
+    if (this.isAdmin) payload.name = this.editName;
+    this.api.updateMember(id, payload)
       .subscribe({
         next: () => {
           this.editingId.set(null);
