@@ -25,6 +25,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
     { path: '/staff', label: 'Personal DECE', icon: 'group' },
     { path: '/institutions', label: 'Instituciones', icon: 'apartment', adminOnly: true },
     { path: '/analytics', label: 'Uso del Bot', icon: 'bar_chart', adminOnly: true },
+    { path: '/audit', label: 'Sesiones', icon: 'manage_history', adminOnly: true },
   ];
 
   user = computed(() => this.auth.currentUser());

@@ -1,0 +1,64 @@
+<!-- Encabezado -->
+<div class="page-header">
+  <div class="page-title">
+    <mat-icon>manage_history</mat-icon>
+    <div>
+      <h2>Historial de sesiones</h2>
+      <p>Registro de inicios de sesión del personal DECE y administradores</p>
+    </div>
+  </div>
+</div>
+
+@if (loading()) {
+  <div class="spinner-wrap">
+    <mat-spinner diameter="40" />
+  </div>
+} @else if (error()) {
+  <div class="error-msg">
+    <mat-icon>error_outline</mat-icon>
+    {{ error() }}
+  </div>
+} @else {
+  <div class="card log-card">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Usuario</th>
+          <th>Correo</th>
+          <th>Rol</th>
+          <th>Institución</th>
+          <th>Fecha y hora</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (log of logs(); track log.id) {
+          <tr>
+            <td>
+              <div class="user-cell">
+                <span class="avatar-mini" [class.admin]="log.userType === 'admin'">
+                  {{ log.userName.charAt(0).toUpperCase() }}
+                </span>
+                {{ log.userName }}
+              </div>
+            </td>
+            <td class="email-col">{{ log.userEmail }}</td>
+            <td>
+              <span class="role-badge" [class.admin]="log.userType === 'admin'">
+                {{ roleLabel(log.userRole) }}
+              </span>
+            </td>
+            <td class="inst-col">{{ log.institutionName ?? '—' }}</td>
+            <td class="date-col">{{ formatDate(log.createdAt) }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="5" class="empty-row">
+              <mat-icon>history</mat-icon>
+              <p>Sin registros de sesión aún.</p>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

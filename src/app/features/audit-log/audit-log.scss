@@ -1,0 +1,111 @@
+.spinner-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 80px 0;
+}
+
+.error-msg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #F87171;
+  padding: 24px 0;
+  font-size: 14px;
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  mat-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    color: var(--accent);
+  }
+
+  h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 2px;
+  }
+
+  p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+}
+
+.log-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.avatar-mini {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 50%;
+  background: rgba(37, 99, 235, 0.2);
+  color: #60A5FA;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.admin {
+    background: rgba(139, 92, 246, 0.2);
+    color: #A78BFA;
+  }
+}
+
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(37, 99, 235, 0.12);
+  color: #93C5FD;
+  border: 1px solid rgba(37, 99, 235, 0.25);
+
+  &.admin {
+    background: rgba(139, 92, 246, 0.12);
+    color: #A78BFA;
+    border-color: rgba(139, 92, 246, 0.25);
+  }
+}
+
+.email-col { color: var(--text-secondary); font-size: 12px; }
+.inst-col  { color: var(--text-secondary); font-size: 13px; }
+.date-col  { color: var(--text-secondary); font-size: 12px; white-space: nowrap; }
+
+.empty-row {
+  text-align: center;
+  padding: 40px !important;
+
+  mat-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    color: var(--border);
+    display: block;
+    margin: 0 auto 8px;
+  }
+
+  p { color: var(--text-secondary); font-style: italic; margin: 0; }
+}

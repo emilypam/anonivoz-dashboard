@@ -140,6 +140,18 @@ export interface BotUsageStats {
   byInstitution: BotUsageByInstitution[];
 }
 
+export interface LoginLog {
+  id: string;
+  userId: string;
+  userName: string;
+  userEmail: string;
+  userRole: string;
+  userType: 'dece' | 'admin';
+  institutionId: string | null;
+  institutionName: string | null;
+  createdAt: string;
+}
+
 export const LABELS = {
   status: {
     PENDING: 'Pendiente',

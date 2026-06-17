@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { Report, ReportList, Stats, DeceMember, Institution, ReportStatus, Priority, BotUsageStats } from '../models';
+import { Report, ReportList, Stats, DeceMember, Institution, ReportStatus, Priority, BotUsageStats, LoginLog } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -113,5 +113,13 @@ export class ApiService {
 
   bootstrapDece(data: { name: string; email: string; password: string; key: string }) {
     return this.http.post(`${this.base}/auth/bootstrap`, data);
+  }
+
+  // Login logs
+
+  getLoginLogs(limit = 100) {
+    return this.http.get<LoginLog[]>(`${this.base}/auth/login-logs`, {
+      params: new HttpParams().set('limit', String(limit)),
+    });
   }
 }
