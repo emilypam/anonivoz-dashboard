@@ -50,7 +50,7 @@ export class StaffComponent implements OnInit {
   form: NewMemberForm = { name: '', email: '', password: '', role: 'COUNSELOR', institutionId: '' };
   formError = signal('');
 
-  editingId = signal<string | null>(null);
+  editingMember = signal<DeceMember | null>(null);
   editName = '';
   editRole = '';
   editActive = true;
@@ -110,30 +110,31 @@ export class StaffComponent implements OnInit {
   }
 
   startEdit(m: DeceMember) {
-    this.editingId.set(m.id);
     this.editName = m.name;
     this.editRole = m.role;
     this.editActive = m.active;
+    this.editingMember.set(m);
   }
 
-  saveEdit(id: string) {
+  saveEdit() {
+    const m = this.editingMember();
+    if (!m) return;
     this.savingEdit.set(true);
     const payload: any = { role: this.editRole as DeceRole, active: this.editActive };
     if (this.isAdmin) payload.name = this.editName;
-    this.api.updateMember(id, payload)
-      .subscribe({
-        next: () => {
-          this.editingId.set(null);
-          this.savingEdit.set(false);
-          this.snack.open('Miembro actualizado', 'OK', { duration: 2500 });
-          this.loadMembers();
-        },
-        error: () => { this.savingEdit.set(false); },
-      });
+    this.api.updateMember(m.id, payload).subscribe({
+      next: () => {
+        this.editingMember.set(null);
+        this.savingEdit.set(false);
+        this.snack.open('Miembro actualizado', 'OK', { duration: 2500 });
+        this.loadMembers();
+      },
+      error: () => { this.savingEdit.set(false); },
+    });
   }
 
   cancelEdit() {
-    this.editingId.set(null);
+    this.editingMember.set(null);
   }
 
   roleLabel(r: string) {

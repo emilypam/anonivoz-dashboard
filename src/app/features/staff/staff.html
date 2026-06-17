@@ -110,68 +110,85 @@
       </thead>
       <tbody>
         @for (m of members(); track m.id) {
-          <tr [class.editing]="editingId() === m.id">
-            <td>
-              @if (editingId() === m.id && isAdmin) {
-                <mat-form-field appearance="fill" subscriptSizing="dynamic" class="inline-field">
-                  <input matInput [(ngModel)]="editName" placeholder="Nombre" />
-                </mat-form-field>
-              } @else {
-                <strong>{{ m.name }}</strong>
-              }
-            </td>
+          <tr>
+            <td><strong>{{ m.name }}</strong></td>
             <td class="email-col">{{ m.email }}</td>
-
-            @if (editingId() === m.id) {
-              <td>
-                <mat-form-field appearance="fill" subscriptSizing="dynamic" class="inline-field">
-                  <mat-select [(ngModel)]="editRole">
-                    @for (r of roles; track r.value) {
-                      <mat-option [value]="r.value">{{ r.label }}</mat-option>
-                    }
-                  </mat-select>
-                </mat-form-field>
-              </td>
-              @if (isAdmin) { <td>{{ institutionName(m.institutionId) }}</td> }
-              <td>
-                <mat-slide-toggle [(ngModel)]="editActive" color="primary">
-                  {{ editActive ? 'Activo' : 'Inactivo' }}
-                </mat-slide-toggle>
-              </td>
-            } @else {
-              <td>{{ roleLabel(m.role) }}</td>
-              @if (isAdmin) { <td class="inst-col">{{ m.institution?.name ?? '—' }}</td> }
-              <td>
-                <span class="status-dot" [class.active]="m.active">
-                  {{ m.active ? 'Activo' : 'Inactivo' }}
-                </span>
-              </td>
-            }
-
+            <td>{{ roleLabel(m.role) }}</td>
+            @if (isAdmin) { <td class="inst-col">{{ m.institution?.name ?? '—' }}</td> }
+            <td>
+              <span class="status-dot" [class.active]="m.active">
+                {{ m.active ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
             <td>{{ m._count?.assignedReports ?? 0 }}</td>
             <td>{{ formatDate(m.createdAt) }}</td>
-
             <td class="actions-col">
-              @if (editingId() === m.id) {
-                <button mat-icon-button color="primary" [disabled]="savingEdit()" (click)="saveEdit(m.id)" title="Guardar">
-                  <mat-icon>check</mat-icon>
-                </button>
-                <button mat-icon-button (click)="cancelEdit()" title="Cancelar">
-                  <mat-icon>close</mat-icon>
-                </button>
-              } @else {
-                <button mat-icon-button (click)="startEdit(m)" title="Editar">
-                  <mat-icon>edit</mat-icon>
-                </button>
-              }
+              <button mat-icon-button (click)="startEdit(m)" title="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
             </td>
           </tr>
         } @empty {
           <tr>
-            <td [attr.colspan]="isAdmin ? 8 : 7" class="empty-row">No hay miembros registrados.</td>
+            <td [attr.colspan]="isAdmin ? 8 : 7" class="empty-row">
+              No hay miembros registrados.
+            </td>
           </tr>
         }
       </tbody>
     </table>
   }
 </div>
+
+<!-- Edit modal -->
+@if (editingMember(); as m) {
+  <div class="modal-backdrop" (click)="cancelEdit()"></div>
+  <div class="edit-modal">
+    <div class="modal-header">
+      <div class="modal-avatar">{{ m.name.charAt(0).toUpperCase() }}</div>
+      <div>
+        <div class="modal-title">Editar miembro</div>
+        <div class="modal-sub">{{ m.email }}</div>
+      </div>
+      <button mat-icon-button class="modal-close" (click)="cancelEdit()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      @if (isAdmin) {
+        <mat-form-field appearance="fill" class="full-field">
+          <mat-label>Nombre completo</mat-label>
+          <mat-icon matPrefix>badge</mat-icon>
+          <input matInput [(ngModel)]="editName" />
+        </mat-form-field>
+      }
+
+      <mat-form-field appearance="fill" class="full-field">
+        <mat-label>Rol</mat-label>
+        <mat-icon matPrefix>work</mat-icon>
+        <mat-select [(ngModel)]="editRole">
+          @for (r of roles; track r.value) {
+            <mat-option [value]="r.value">{{ r.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <span class="toggle-label">Estado de la cuenta</span>
+          <span class="toggle-sub">{{ editActive ? 'El miembro puede iniciar sesión' : 'Acceso bloqueado' }}</span>
+        </div>
+        <mat-slide-toggle [(ngModel)]="editActive" color="primary" />
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button mat-stroked-button (click)="cancelEdit()">Cancelar</button>
+      <button mat-flat-button color="primary" [disabled]="savingEdit()" (click)="saveEdit()">
+        @if (savingEdit()) { <mat-spinner diameter="16" /> }
+        @else { Guardar cambios }
+      </button>
+    </div>
+  </div>
+}
