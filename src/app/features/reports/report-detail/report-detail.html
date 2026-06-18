@@ -52,6 +52,14 @@
       <!-- Tab: Info -->
       @if (activeTab() === 'info') {
         <div class="tab-content card">
+          @if (!r.incident) {
+            <section class="info-section">
+              <div class="no-incident">
+                <mat-icon>info_outline</mat-icon>
+                <p>Esta denuncia no tiene detalles de incidente registrados.</p>
+              </div>
+            </section>
+          }
           @if (r.incident) {
             <section class="info-section">
               <h3>Detalles del incidente</h3>
@@ -111,9 +119,9 @@
               <h3>Evidencia</h3>
               <div class="evidence-list">
                 @for (e of r.evidence; track e.id) {
-                  <a [href]="e.url" target="_blank" rel="noopener" class="evidence-link">
+                  <a [href]="e.url" target="_blank" rel="noopener" class="evidence-link" [title]="e.url">
                     <mat-icon>link</mat-icon>
-                    {{ e.url }}
+                    <span class="evidence-url">{{ e.url }}</span>
                   </a>
                 }
               </div>

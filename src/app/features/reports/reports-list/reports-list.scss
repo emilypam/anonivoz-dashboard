@@ -75,6 +75,14 @@ tr:hover .dismiss-btn {
   opacity: 1;
 }
 
+.dismiss-confirm {
+  display: flex;
+  align-items: center;
+  gap: 0;
+
+  .confirm-yes { color: #ef4444 !important; }
+}
+
 .empty-row {
   text-align: center;
   color: var(--text-secondary);

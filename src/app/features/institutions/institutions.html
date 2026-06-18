@@ -111,23 +111,42 @@
               </button>
             </div>
 
-            @if (qrInstitution()?.id === inst.id) {
-              <div class="qr-panel">
-                <p class="qr-label">Código QR para estudiantes</p>
-                <img [src]="qrUrl(inst.code)" [alt]="'QR ' + inst.name" class="qr-img" />
-                <div class="link-row">
-                  <span class="link-text">{{ deepLink(inst.code) }}</span>
-                  <button mat-icon-button title="Copiar enlace" (click)="copyLink(inst.code)">
-                    <mat-icon>content_copy</mat-icon>
-                  </button>
-                </div>
-                <p class="qr-hint">Los estudiantes escanean este QR para acceder al bot ya vinculado a esta institución.</p>
-              </div>
-            }
           }
 
         </div>
       }
+    </div>
+  }
+
+  @if (qrInstitution(); as qrInst) {
+    <div class="modal-backdrop" (click)="closeQr()"></div>
+    <div class="qr-modal">
+      <div class="qr-modal-header">
+        <div class="qr-modal-title">
+          <mat-icon>qr_code_2</mat-icon>
+          <div>
+            <div class="qr-modal-name">{{ qrInst.name }}</div>
+            <div class="qr-modal-sub">Código QR de acceso al bot</div>
+          </div>
+        </div>
+        <button mat-icon-button (click)="closeQr()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="qr-modal-body">
+        <img [src]="qrUrl(qrInst.code)" [alt]="'QR ' + qrInst.name" class="qr-img" />
+        <p class="qr-hint">Los estudiantes escanean este QR para acceder al bot vinculado a esta institución.</p>
+        <div class="link-row">
+          <span class="link-text">{{ deepLink(qrInst.code) }}</span>
+          <button mat-icon-button title="Copiar enlace" (click)="copyLink(qrInst.code)">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+        </div>
+        <a [href]="qrUrl(qrInst.code)" target="_blank" rel="noopener" class="download-link">
+          <mat-icon>open_in_new</mat-icon>
+          Ver QR en tamaño completo
+        </a>
+      </div>
     </div>
   }
 </div>

@@ -7,6 +7,19 @@
       <p>Registro de inicios de sesión del personal DECE y administradores</p>
     </div>
   </div>
+
+  <div class="filter-bar">
+    <mat-form-field appearance="fill" subscriptSizing="dynamic">
+      <mat-label>Rol</mat-label>
+      <mat-select [(ngModel)]="filterRole" (ngModelChange)="onFilterChange()">
+        <mat-option value="">Todos</mat-option>
+        <mat-option value="COUNSELOR">Consejero/a</mat-option>
+        <mat-option value="COORDINATOR">Coordinador/a</mat-option>
+        <mat-option value="DIRECTOR">Director/a</mat-option>
+        <mat-option value="ADMIN">Administrador</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 </div>
 
 @if (loading()) {
@@ -31,7 +44,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (log of logs(); track log.id) {
+        @for (log of pagedLogs; track log.id) {
           <tr>
             <td>
               <div class="user-cell">
@@ -54,11 +67,28 @@
           <tr>
             <td colspan="5" class="empty-row">
               <mat-icon>history</mat-icon>
-              <p>Sin registros de sesión aún.</p>
+              <p>{{ filterRole ? 'Sin registros con el filtro aplicado.' : 'Sin registros de sesión aún.' }}</p>
             </td>
           </tr>
         }
       </tbody>
     </table>
+
+    @if (filteredLogs.length > pageSize) {
+      <div class="pagination">
+        <span class="pagination-info">
+          Página {{ pageIndex + 1 }} de {{ totalPages }}
+          &nbsp;·&nbsp; {{ filteredLogs.length }} registros
+        </span>
+        <div class="pagination-btns">
+          <button mat-icon-button [disabled]="pageIndex === 0" (click)="prevPage()">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <button mat-icon-button [disabled]="pageIndex >= totalPages - 1" (click)="nextPage()">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
+      </div>
+    }
   </div>
 }

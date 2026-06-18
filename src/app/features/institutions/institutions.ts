@@ -126,8 +126,12 @@ export class InstitutionsComponent implements OnInit {
   }
 
   showQr(inst: Institution) {
-    this.qrInstitution.set(this.qrInstitution()?.id === inst.id ? null : inst);
+    this.qrInstitution.set(inst);
     this.editingId.set(null);
+  }
+
+  closeQr() {
+    this.qrInstitution.set(null);
   }
 
   qrUrl(code: string): string {

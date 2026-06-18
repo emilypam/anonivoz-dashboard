@@ -30,6 +30,7 @@ export class LoginComponent {
   loading = signal(false);
   error = signal('');
   showPassword = signal(false);
+  showSetupPassword = signal(false);
 
   // First-admin setup
   setupMode = signal(false);

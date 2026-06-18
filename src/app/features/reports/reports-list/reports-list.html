@@ -7,7 +7,7 @@
     <mat-form-field appearance="outline" subscriptSizing="dynamic">
       <mat-label>Ir a reporte #</mat-label>
       <mat-icon matPrefix>tag</mat-icon>
-      <input matInput type="number" min="1" [(ngModel)]="searchNumber" name="searchNumber" placeholder="42">
+      <input matInput type="number" min="1" [(ngModel)]="searchNumber" (ngModelChange)="searchNotFound = false" name="searchNumber" placeholder="42">
     </mat-form-field>
     <button mat-flat-button type="submit" [disabled]="!searchNumber">Ir</button>
     @if (searchNotFound) {
@@ -109,25 +109,42 @@
             <td class="date-col">{{ formatDate(r.createdAt) }}</td>
             <td class="action-col">
               @if (r.status !== 'DISMISSED' && r.status !== 'RESOLVED') {
-                <button
-                  mat-icon-button
-                  class="dismiss-btn"
-                  matTooltip="Desestimar reporte"
-                  [disabled]="dismissing() === r.id"
-                  (click)="dismiss(r.id, $event)"
-                >
-                  @if (dismissing() === r.id) {
-                    <mat-spinner diameter="16" />
-                  } @else {
-                    <mat-icon>block</mat-icon>
-                  }
-                </button>
+                @if (pendingDismiss() === r.id) {
+                  <div class="dismiss-confirm" (click)="$event.stopPropagation()">
+                    <button mat-icon-button class="confirm-yes" matTooltip="Confirmar desestimar" (click)="confirmDismiss($event)">
+                      <mat-icon>check</mat-icon>
+                    </button>
+                    <button mat-icon-button matTooltip="Cancelar" (click)="cancelDismiss($event)">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </div>
+                } @else {
+                  <button
+                    mat-icon-button
+                    class="dismiss-btn"
+                    matTooltip="Desestimar reporte"
+                    [disabled]="!!dismissing()"
+                    (click)="dismiss(r.id, $event)"
+                  >
+                    @if (dismissing() === r.id) {
+                      <mat-spinner diameter="16" />
+                    } @else {
+                      <mat-icon>block</mat-icon>
+                    }
+                  </button>
+                }
               }
             </td>
           </tr>
         } @empty {
           <tr>
-            <td [attr.colspan]="isAdmin ? 9 : 8" class="empty-row">No se encontraron denuncias con los filtros aplicados.</td>
+            <td [attr.colspan]="isAdmin ? 9 : 8" class="empty-row">
+              @if (filterStatus || filterPriority || filterType || filterInstitutionId || filterDateFrom || filterDateTo) {
+                Sin resultados con los filtros aplicados.
+              } @else {
+                No hay denuncias registradas todavía.
+              }
+            </td>
           </tr>
         }
       </tbody>

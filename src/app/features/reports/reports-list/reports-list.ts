@@ -79,6 +79,7 @@ export class ReportsListComponent implements OnInit {
   ];
 
   dismissing = signal<string | null>(null);
+  pendingDismiss = signal<string | null>(null);
 
   constructor(
     private api: ApiService,
@@ -150,7 +151,14 @@ export class ReportsListComponent implements OnInit {
 
   dismiss(id: string, event: Event) {
     event.stopPropagation();
-    if (this.dismissing()) return;
+    this.pendingDismiss.set(id);
+  }
+
+  confirmDismiss(event: Event) {
+    event.stopPropagation();
+    const id = this.pendingDismiss();
+    if (!id || this.dismissing()) return;
+    this.pendingDismiss.set(null);
     this.dismissing.set(id);
     this.api.updateStatus(id, 'DISMISSED').subscribe({
       next: () => {
@@ -163,6 +171,11 @@ export class ReportsListComponent implements OnInit {
         this.snack.open('Error al desestimar', 'OK', { duration: 2500 });
       },
     });
+  }
+
+  cancelDismiss(event: Event) {
+    event.stopPropagation();
+    this.pendingDismiss.set(null);
   }
 
   openReport(id: string) {

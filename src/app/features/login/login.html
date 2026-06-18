@@ -91,7 +91,10 @@
 
         <mat-form-field appearance="fill" class="full-width">
           <mat-label>Contraseña</mat-label>
-          <input matInput type="password" [(ngModel)]="setupPassword" />
+          <input matInput [type]="showSetupPassword() ? 'text' : 'password'" [(ngModel)]="setupPassword" />
+          <button mat-icon-button matSuffix type="button" (click)="showSetupPassword.set(!showSetupPassword())">
+            <mat-icon>{{ showSetupPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
         </mat-form-field>
 
         <mat-form-field appearance="fill" class="full-width">

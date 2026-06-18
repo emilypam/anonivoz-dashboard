@@ -97,7 +97,11 @@
   transition: box-shadow 0.15s;
 
   &:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
-  &.inactive { opacity: 0.65; }
+
+  &.inactive {
+    opacity: 0.72;
+    border-left: 3px solid #dc2626;
+  }
 }
 
 .inst-header {
@@ -197,23 +201,6 @@
   button { color: #1a5668; }
 }
 
-.qr-panel {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid #e8f4f6;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.qr-label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #1a5668;
-  margin: 0;
-}
-
 .qr-img {
   border-radius: 8px;
   border: 1px solid #cde8eb;
@@ -245,7 +232,85 @@
   color: #6b8d97;
   text-align: center;
   margin: 0;
-  max-width: 260px;
+  max-width: 300px;
+}
+
+// QR modal
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 100;
+  backdrop-filter: blur(2px);
+}
+
+.qr-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 101;
+  width: 360px;
+  background: #fff;
+  border: 1px solid #cde8eb;
+  border-radius: 16px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.qr-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 8px 14px 20px;
+  border-bottom: 1px solid #e8f4f6;
+}
+
+.qr-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  mat-icon { color: #1a5668; font-size: 24px; width: 24px; height: 24px; }
+}
+
+.qr-modal-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1a3d4f;
+}
+
+.qr-modal-sub {
+  font-size: 12px;
+  color: #6b8d97;
+  margin-top: 1px;
+}
+
+.qr-modal-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.download-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #1a5668;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: #e0f5f5;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background 0.15s;
+
+  &:hover { background: #cde8eb; }
+  mat-icon { font-size: 16px; width: 16px; height: 16px; }
 }
 
 .edit-area {
