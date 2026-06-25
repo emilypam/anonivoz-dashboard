@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E3A8A"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#1E3A8A" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sombra del escudo -->
+  <path d="M50 12 L87 25 L87 54 C87 74 70 88 50 96 C30 88 13 74 13 54 L13 25 Z"
+        fill="#0F172A" opacity="0.25" transform="translate(2,3)"/>
+
+  <!-- Escudo principal -->
+  <path d="M50 12 L87 25 L87 54 C87 74 70 88 50 96 C30 88 13 74 13 54 L13 25 Z"
+        fill="url(#shieldGrad)"/>
+
+  <!-- Brillo superior del escudo -->
+  <path d="M50 12 L87 25 L87 54 C87 74 70 88 50 96 C30 88 13 74 13 54 L13 25 Z"
+        fill="url(#glowGrad)"/>
+
+  <!-- Borde del escudo -->
+  <path d="M50 14 L85 27 L85 54 C85 73 69 86 50 94 C31 86 15 73 15 54 L15 27 Z"
+        fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+
+  <!-- Burbuja de voz (speech bubble) -->
+  <rect x="27" y="30" width="46" height="34" rx="7" fill="white"/>
+  <polygon points="34,64 28,74 46,64" fill="white"/>
+
+  <!-- Micrófono dentro de la burbuja -->
+  <rect x="45" y="35" width="10" height="16" rx="5" fill="#1E40AF"/>
+  <path d="M37 49 Q37 59 50 59 Q63 59 63 49"
+        stroke="#1E40AF" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+  <line x1="50" y1="59" x2="50" y2="64"
+        stroke="#1E40AF" stroke-width="2.8" stroke-linecap="round"/>
+  <line x1="44" y1="64" x2="56" y2="64"
+        stroke="#1E40AF" stroke-width="2.8" stroke-linecap="round"/>
+</svg>
