@@ -12,6 +12,12 @@
       <div class="login-form">
         <h2>Iniciar sesión</h2>
 
+        @if (sessionAlert()) {
+          <div class="alert alert-warning">
+            <mat-icon>timer_off</mat-icon>{{ sessionAlert() }}
+          </div>
+        }
+
         @if (error()) {
           <div class="alert alert-error">{{ error() }}</div>
         }

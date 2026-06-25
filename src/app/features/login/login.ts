@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -29,6 +29,7 @@ export class LoginComponent {
   password = '';
   loading = signal(false);
   error = signal('');
+  sessionAlert = signal('');
   showPassword = signal(false);
   showSetupPassword = signal(false);
 
@@ -46,8 +47,12 @@ export class LoginComponent {
     private auth: AuthService,
     private api: ApiService,
     private router: Router,
+    private route: ActivatedRoute,
   ) {
     if (auth.isLoggedIn()) router.navigate(['/dashboard']);
+    const reason = route.snapshot.queryParamMap.get('reason');
+    if (reason === 'expired') this.sessionAlert.set('Tu sesión ha expirado. Inicia sesión nuevamente.');
+    else if (reason === 'inactivity') this.sessionAlert.set('Tu sesión se cerró por inactividad. Inicia sesión nuevamente.');
   }
 
   login() {

@@ -8,7 +8,7 @@ import { AuthResponse, CurrentUser } from '../models';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly TOKEN_KEY = 'anonivoz_token';
-  private readonly USER_KEY = 'anonivoz_user';
+  private readonly USER_KEY  = 'anonivoz_user';
 
   currentUser = signal<CurrentUser | null>(this.loadUser());
 
@@ -29,19 +29,39 @@ export class AuthService {
       );
   }
 
-  logout() {
+  /** Borra token y usuario de memoria sin navegar (uso interno). */
+  clearSession() {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
     this.currentUser.set(null);
-    this.router.navigate(['/login']);
+  }
+
+  /** Cierra sesión y redirige a login. reason: 'expired' | 'inactivity' */
+  logout(reason?: string) {
+    this.clearSession();
+    const extras = reason ? { queryParams: { reason } } : undefined;
+    this.router.navigate(['/login'], extras);
   }
 
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
   }
 
+  /** Verifica si el token JWT ya venció leyendo su campo `exp`. */
+  isTokenExpired(token?: string): boolean {
+    const t = token ?? this.getToken();
+    if (!t) return true;
+    try {
+      const payload = JSON.parse(atob(t.split('.')[1]));
+      return payload.exp * 1000 < Date.now();
+    } catch {
+      return true;
+    }
+  }
+
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    const token = this.getToken();
+    return !!token && !this.isTokenExpired(token);
   }
 
   isAdmin(): boolean {
